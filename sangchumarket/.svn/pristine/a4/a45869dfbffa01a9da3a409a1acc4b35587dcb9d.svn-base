@@ -1,0 +1,466 @@
+<%@page import="sangchu.qnaBoard.vo.QNABoardVO"%>
+<%@page import="java.util.List"%>
+<%@page import="sangchu.main.vo.MemberVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	String email="";
+
+	MemberVO memVO = (MemberVO)session.getAttribute("memVO");
+	
+	if(memVO != null){
+		email = memVO.getEmail();
+	}
+
+%>        
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/header.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/owl.carousel.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- JavaScript Libraries -->
+    <script src="/js/jquery/jquery-3.7.0.min.js"></script>
+    <script src="/js/main/owl.carousel.min.js"></script>
+    <script src="/js/main/bootstrap.bundle.min.js"></script>
+    <script src="/js/main/easing.min.js"></script>
+    <script src="/js/main/owl.carousel.min.js"></script>
+    <script src="/js/main/main.js"></script>
+    
+    
+<script>
+
+	var page = 1;
+	
+	$(function(){
+		
+		$.listPageServer(1);
+		
+		$('#qnaWrite').on('click', function(){
+			
+			location.href="/qnaInsertForm.do"
+		});
+		
+		//이벤트 
+		 //다음 클릭 
+		  $(document).on('click','#next',function(){
+			  currentPage = parseInt($('.pageno').last().text().trim())+1;
+		  
+			  $.listPageServer(currentPage);
+		  
+		  })
+		 
+		  //이전클릭
+		  $(document).on('click','#prev',function(){
+			  currentPage = parseInt($('.pageno').first().text().trim())-1;
+		  
+			  $.listPageServer(currentPage);
+		  
+		  })
+		
+		  //페이지번호 클릭 
+		  $(document).on('click','.pageno',function(){
+			  currentPage = $(this).text().trim();
+			  $.listPageServer(currentPage);
+		  })
+		
+	})
+	
+	
+	
+	//문의 리스트 출력하기
+	$.listPageServer = function(page) {
+	
+		$.ajax({
+			url		: "/adminQNABoardList.do",
+			type	: 'get',
+			data	: {
+				email 	: "<%=email%>",
+				page 	: page
+			},
+			dataType: 'json',
+			success: function(res) {
+	
+				var code="";
+				$.each(res.datas, function(i, v) {
+					content = v.cm_content; 	//엔터가 포함되어 있다. \r\n
+					content = content.replace(/\n/g, "<br>");
+					
+					code += '\
+						 <tr onclick="qnadetail(\''+v.cm_no+'\',\''+page+'\')">\
+			                <td class="align-middle" style="width: 15px;">'+(v.rnum)+'</td>\
+			                <td class="align-middle">'+(v.cm_title)+'</td>\
+			                <td class="align-middle">'+(v.email)+'</td>\
+			                <td class="align-middle">'+("Y" == v.cr_no ? '<span style="color: #28a745;">답변완료</span>' : '미답변' )+'</td>\
+			                <td class="align-middle">'+(v.cm_date)+'</td>\
+			                <td>\
+			                	<button onclick="qnaDelete(\''+v.cm_no+'\')" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>\
+			            	</td>\
+			            	<td>\
+			                	<button onclick="qnaReply(\''+v.cm_no+'\')" class="btn btn-sm btn-info qnaTextSet">답변</button>\
+			            	</td>\
+			            </tr>\
+					'; 
+				})//$.each 반복문
+			
+				//게시판 리스트 출력
+				$('#boardCotent').html(code);
+	
+				//페이지 출력
+				pager = pageList(res.sp, res.ep, res.tp, page);
+				$('#pageButton').html(pager); 
+	
+			},//success
+	
+			error: function(xhr) {
+				alert("상태 : " + xhr.status)
+			},
+			
+		})
+	}
+	
+	//관리자 문의글 답변달기
+	
+	function qnaReply (cm_no){
+			
+		location.href ="/callReplyForm.do?id="+cm_no
+	}
+	
+	
+	
+	
+	
+	
+	
+	//문의글과 그 답변 삭제
+	
+	function qnaDelete (cm_no){
+		
+		if(confirm("문의를 삭제하시겠습니까?")){
+			
+			$.ajax({
+				url		: "/deleteQNABoard.do",
+				type	: 'post',
+				data	: {
+					cm_no : cm_no
+				},
+				dataType: 'json',
+				success: function(res) {
+					
+					if(res.sw == "성공"){
+						alert("문의를 삭제했습니다.");
+						location.reload();
+					}	
+				},//success
+		
+				error: function(xhr) {
+					alert("상태 : " + xhr.status)
+				},
+			})
+		}
+	}
+	
+	
+	
+	
+	
+	
+	//문의글과 관리자 답글
+	function qnadetail(cm_no,page){
+		
+		
+		$.ajax({
+			url		: "/adminQNABoardList.do",
+			type	: 'get',
+			data	: {
+				email 	: "<%=email%>",
+				page 	: page
+			},
+			dataType: 'json',
+			success: function(res) {
+	
+				var code="";
+			
+				
+				$.each(res.datas, function(i, v) {
+					
+					if(cm_no == v.cm_no){
+						content = v.cm_content; 	//엔터가 포함되어 있다. \r\n
+						content = content.replace(/\n/g, "<br>");
+						cr_content = v.cr_content; 	//엔터가 포함되어 있다. \r\n
+						cr_content = cr_content.replace(/\n/g, "<br>");
+						
+						$('#sideTitle').html('제목<hr>'+v.cm_title);
+						$('#sideQNA').html(content);
+						$('#sideReply').html(cr_content);
+					}
+					
+	
+				})//$.each 반복문
+			},//success
+	
+			error: function(xhr) {
+				alert("상태 : " + xhr.status)
+			},
+		})
+	}
+	
+
+	
+	//페이지 처리
+	pageList = function(sp, ep, tp,page) {
+		//이전
+		pager = "";
+		pager += '<ul class="pagination justify-content-center" style="margin-bottom: 100px;">';
+		if (sp > 1) {
+			pager += '<li class="page-item "><a class="page-link" href="#" id="prev">Previous</span></a></li>';
+		}
+	
+		//페이지번호 
+		for (i = sp; i <= ep; i++) {
+			if (i == page) {
+				pager += '<li class="page-item active "><a class="page-link pageno" href="#">'+i+'</a></li>';
+			} else {
+				pager += '<li class="page-item "><a class="page-link pageno" href="#">'+i+'</a></li>';
+			}
+		}
+		//다음 
+		if (ep < tp) {
+			pager += '<li class="page-item"><a class="page-link" href="#" id="next">Next</a></li>';
+		}
+		pager += '</ul>';
+	
+		return pager;
+	}
+	 
+	
+    
+    
+</script>
+    
+<meta charset="UTF-8">
+<title>상추마켓 관리자페이지</title>
+</head>
+<body>
+ <%    
+	if(memVO == null){  
+
+%> 
+    <div class="topDiv">
+        <div class="buttonToLogin">
+            <a href="<%=request.getContextPath()%>/loginMain.do">로그인 / 회원가입</a>
+        </div>
+    </div>
+<%
+	}else{
+%>   
+
+    <div class="topDiv">
+        <div class="buttonToLogin">
+            <a href="<%=request.getContextPath()%>/mypageMain.do"><%=memVO.getEmail()%> 계정</a>　/　
+            <a href="<%=request.getContextPath()%>/">로그아웃</a>
+        </div>
+    </div>
+<% 
+	}
+%>   
+ 
+    <div id="header" style="background: #03c75a;">
+        <a class=logoSection href="<%=request.getContextPath()%>/adminMainPage.do">
+            <img src="/images/Logo.png" class=logoImg width="40" height="40" alt="상추마켓로고">
+            <p class="font" style="color: #ffffff;">상추마켓 관리자모드 　　　　　　　　　　　　　　　　　　</p>
+        </a>
+
+        <div>
+          
+        </div>
+
+<% 
+	if(memVO == null){  //회원로그인이 안되어있을때
+%>
+        <div class="mypageNZzim2">
+            <div class="mypageNZzim_img">
+            </div>
+        </div>
+    </div>
+<% 
+	}else{ //회원로그인이 되어있을때
+%>    
+    <div class="mypageNZzim2">
+            <div class="mypageNZzim_img">
+            </div>
+        </div>
+    </div>
+<% 
+	}
+%>     
+
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-dark mb-30">
+        <div class="row px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+            </div>
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 py-lg-0 px-0">
+                     <a href="<%=request.getContextPath()%>/manageUsers.do" class="nav-item nav-link" style="margin-left: -310px;">회원관리</a>
+                     <a href="<%=request.getContextPath()%>/reportUsers.do" class="nav-item nav-link">신고내역 관리</a>
+                     <a href="<%=request.getContextPath()%>/userStopDate.do" class="nav-item nav-link">회원 계정정지 해제</a>
+                     <a href="<%=request.getContextPath()%>/qnaBoardAdmin.do" class="nav-item nav-link">문의관리</a>
+                                          <a href="<%=request.getContextPath()%>/adminMainPage.do" class="nav-item nav-link">관리자 메인페이지</a>
+                     
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="breadcrumb-item text-dark" href="#">HOME</a>
+                    <span class="breadcrumb-item active">고객센터</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Cart Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+           		 <form class="mb-30" action="">
+                    <div class="input-group">
+                        
+                    </div>
+                </form>
+                <table class="table table-light table-borderless table-hover text-center mb-0">
+                     <colgroup>
+					    <col width="5%" />
+					    <col width="30%" />
+					    <col width="20%" />
+					    <col width="10%" />
+					    <col width="15%" />
+					    <col width="5%" />
+					    <col width="5%" />
+					 </colgroup>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>NO</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>답변상태</th>
+                            <th>작성일</th>
+                            <th>　</th>
+                            <th>　</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle" id="boardCotent">
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <form class="mb-30" action="">
+                </form>
+                <h5 class="position-relative text-uppercase mb-3"><span class="bg-secondary pr-3" id="sideTitle"></span></h5>
+                <div class="bg-light qna-padd mb-5" style="height: 290px;" >
+                   문의글
+                   <hr class="qna-hr">
+                   <div class="pb-2" id="sideQNA" style="height: 82%; overflow: auto;">
+                   </div>
+                </div>
+                <div class="bg-light qna-padd mb-5" style="height: 237px;">
+                    답변
+                    <hr class="qna-hr">
+                    <div class="pb-2" id="sideReply" style="height: 82%; overflow: auto;">
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cart End -->
+	
+	 <div class="col-12">
+        <nav id="pageButton">
+            <ul class="pagination justify-content-center" style="margin-bottom: 100px;">
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</span></a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+   <!--푸터시작-->
+ 	<div class="container-fluid bg-dark text-secondary mt-5 pt-5">
+        <div class="row px-xl-5 pt-5">
+            <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                <div class="title"><img src="../../images/Logo.png" alt="로고.png" class="logo" style="height: 30px;">상추마켓</div><br>
+                <p class="mb-4">상호 : 상추마켓 | 대표자명 : 박민주 |<br> </p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>대전광역시
+                        중구 계룡로 846</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>kdy@ddit.com</p>
+                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+010-1234-5678 </p>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="col-md-4 mb-5">
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>마켓소개</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>안심귀가서비스란?</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>고객센터</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>메인페이지</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>마이페이지</a>
+                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>커뮤니티</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>이용약관</a>
+                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>개인정보처리방침</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+                        <div class="d-flex">
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+            <div class="col-md-6 px-xl-0">
+                <p class="mb-md-0 text-center text-md-left text-secondary">
+                    © <a class="text-primary" href="#">copyright</a>.상추마켓
+                </p>
+            </div>
+            <div class="col-md-6 px-xl-0 text-center text-md-right">
+                <img class="img-fluid" src="img/payments.png" alt="">
+            </div>
+        </div>
+    </div>
+ 	
+ 	<!-- 푸터 끝 -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+	
+
+</body>
+</html>

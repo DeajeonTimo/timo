@@ -1,0 +1,185 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page isELIgnored="true"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>관리자-신고관리</title>
+</head>
+<script src="<%=request.getContextPath()%>/js/jquery/jquery-3.7.0.min.js"></script>
+
+    <style>
+    
+      /* Google web font CDN*/
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap');
+    
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: normal;
+        }
+        
+        .enquiryUsers_wrap {
+            width: 900px;
+            margin: 100px auto;
+        }
+        
+        .enquiryUsers-title {
+            margin-bottom: 30px;
+        }
+        
+        .enquiryUsers-title strong {
+            font-size: 2.3rem;
+        }
+        
+        .enquiryUsers-table  {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .enquiryUsers-table tr {
+            height: 40px;
+        }
+
+        .enquiryUsers-table tbody tr:hover {
+            background-color:  #03cd5e98;
+            transition: 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .enquiryUsers-table th {
+            border-bottom: 1px solid #8a8787;
+            background-color: rgb(233, 233, 233);
+        }
+        .enquiryUsers-table td {
+            text-align: center;
+        }
+
+        .enquiryUsers-table td:nth-child(2) {
+            max-width: 10px;
+            overflow : hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        
+        </style>
+    
+    <body>
+        <div class="enquiryUsers_wrap">
+        
+            <div class="enquiryUsers-title">
+                <strong>신고목록</strong>
+            </div>
+    
+          <table class="enquiryUsers-table">
+               <colgroup>
+                   <col width="14%" />
+                   <col width="36%" />
+                   <col width="25%" />
+                   <col width="25%" />
+               </colgroup>
+               <thead>
+                <tr>
+                    <th class">신고번호</th>
+                    <th class>신고내용</th>
+                    <th class>신고자</th>
+                    <th class>신고대상자</th>
+              </tr>
+              </thead>
+                 <tbody id="listBody">
+                <tr>
+                    <td class="align-middle">159753</td>
+                    <td class="align-middle">제가이렇게했는데요걔가이렇게해서요뻥튀기콩나물청국장선인장제가이렇게했는데요걔가이렇게해서요뻥튀기콩나물청국장선인장제가이렇게했는데요걔가이렇게해서요뻥튀기콩나물청국장선인장</td>
+                    <td class="align-middle">123@naver.com</td>
+                    <td class="align-middle">456@naver.com</td>
+                 </tr>
+              </tbody>
+            </table>	
+        </div>
+</body>
+<script>
+		 $(function(){
+			 getReportList();
+			
+			 function getReportList() {
+					var code="";
+					$.ajax({
+						url		: "<%=request.getContextPath()%>/getReportList.do",
+						type	: 'get',
+						dataType: 'json',
+						success: function(res) {
+							 if(res.sw=="no"){
+								 alert('신고글이 존재하지 않습니다.')
+								 code+=`
+								 <tr class="report-row">
+					                <td class="align-middle">123123</td>
+					                <td class="align-middle">sdf@baver</td>
+					                <td class="align-middle">qweasd</td>
+					                <td class="align-middle">asdasdad</td>
+				         	   </tr>`;
+								 
+							 }else{ //조회결과 있는경우 => list를 가져와서 출력
+								 $.each(res.datas, function(i, v){
+							code += `
+									 	<tr class="report-row">
+							                <td class="align-middle e_no">${v.e_no}</td>
+							                <td class="align-middle">${v.email}</td>
+							                <td class="align-middle">${v.e_accuser}</td>
+							                <td class="align-middle">${v.e_target}</td>
+						         	   </tr>
+						            ` ;
+							 	})///$.each 반복문
+							 }//if-else문 끝
+							 
+						$('#listBody').append().html(code);
+						
+						 $('.report-row').click(function() {
+			                    var eNo = $(this).find('.e_no').text();
+			                    
+			                    $.ajax({
+			                    	url		: "<%=request.getContextPath()%>/getReportList.do",
+									type	: 'post',
+									data : {"eNo" : eNo},
+									success: function(res) {
+										if(res.sw=="ok"){ //vo 존재함
+											
+										}else{ //vo 존재안함
+											
+										}
+										
+										
+										
+										
+										
+									},
+									error : function(xhr){
+										alert('상태 : ' + xhr.status)
+			                   		},
+									dataType: 'json'
+			                    }) //안쪽 ajax 끝
+			                    
+			                    
+			                    
+			                    
+			                    
+			                    
+			                    
+			                    
+			                    
+			                    
+			                }); //.report-row 클릭 끝
+						},// 바깥쪽 ajax success 끝
+						error : function(xhr){
+							alert('상태 : ' + xhr.status)
+						}
+					})//ajax 끝
+			  }//function getReportList
+		  })
+		  
+		  
+</script>
+</html>

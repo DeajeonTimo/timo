@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	최초 작성자 : 김석호
+	최초 작성일 : 2023.08.07 13:39
+	
+	최근 수정자 : 김석호
+	최근 수정일 : 2023.08.18 11:35
+	
+	수정이력 :
+	2023.08.09 19:45 - 김석호 : 채팅 디테일 미완성 부분 구현
+	2023.08.10 00:24 - 김석호 : chatVO변경으로 인한 getChatVO, getAllChatList 쿼리문 변경
+	2023.08.10 01:25 - 김석호 : 채팅방에서 이미지 뿌려줄 용도로 이미지 경로 가져오는 쿼리문 추가
+	2023.08.10 02:08 - 김석호 : 채팅방에서 유저 닉네임을 표시하기 위한 ChatDetailVO 변경으로 해당 쿼리문 변경
+	2023.08.18 11:35 - 김석호 : 채팅방과 연계된 거래 관련 쿼리문 추가
+	
+	
+ -->
+
+
+
+<mapper namespace="chat">
+<!-- 채팅방 번호로 채팅VO객체 반환하는 쿼리  -->
+	<select id="getChatVO" resultType="chatVO" parameterType="String">
+		select
+			*
+		from
+			t_chat
+		where
+			c_no = #{c_no} 
+	</select>
+	
+<!-- 유저 아이디로 소유한 채팅방 목록을 채팅VO객체로 반환하는 쿼리 -->
+	<select id="getAllChatList" resultType="chatVO" parameterType="String">
+		select
+			a.c_no, a.t_no, a.email, tb.tb_title
+		from
+			t_chat a, trade t, t_board tb
+		where
+			a.t_no = t.t_no
+		and
+			t.t_no = tb.t_no
+		and
+			(
+				a.email = #{email}
+			or
+				t.email = #{email}
+			)
+	</select>
+	
+<!-- 채팅방 번호로 모든 채팅이력을 채팅DetailVO의 List객체로 반환하는 쿼리 -->
+	<select id="getChatLog" resultType="chatDetailVO" parameterType="String">
+		select u.chat_no, u.c_no, u.chat_date, u.chat_content, u.email, us.u_nick from u_chat u, users us where u.c_no = #{c_no} and u.email = us.email order by chat_date asc
+	</select>
+	
+<!-- 거래게시글에서 새로운 채팅 시도를 하는 쿼리 -->
+<!-- 거래대화에서 새로운 채팅방을 먼저 만든다 -->
+	<insert id="insertNewChat" parameterType="chatVO">
+		insert into t_chat
+			(c_no
+			,t_no
+			,email)
+		values(seq_for_newchat.nextVal
+			,sysdate
+			,#{t_no}
+			,#{email})
+	</insert>
+	
+<!-- 채팅입력시 채팅로그를 남기는 쿼리 -->
+	<insert id="insertChatLog" parameterType="chatDetailVO">
+		insert into u_chat
+			(chat_no
+			,c_no
+			,chat_date
+			,chat_content
+			,email)
+		values(
+			for_chatlog_seq.nextval
+			, #{c_no}
+			, sysdate
+			, #{chat_content}
+			, #{email}
+		)
+	</insert>
+	<select id="emailImage" parameterType="String" resultType="String">
+		select
+			img_src
+		from
+			IMAGES
+		where
+			img_code = #{email}
+	</select>
+	
+	<!--새로운 채팅방을 만드는 쿼리문  -->
+	<insert id="createNewChatRoom" parameterType="chatVO">
+		insert into t_chat (c_no, t_no,email)
+		values (seq_for_newchat.nextVal , #{t_no},#{email})
+	</insert>
+	
+	<!-- 개설하려는 채팅방이 이미 개설되었있는지 판단하는 쿼리문 -->
+	<select id="isThereAlreadyChatRoom" parameterType="chatVO" resultType="Integer">
+		select count(*) from t_chat
+		where t_no = #{t_no}
+		and email = #{email}
+	</select>
+	
+	<!-- 거래번호의 작성자를 가지고 오는 쿼리문 -->
+	<select id="whoRegThis" parameterType="String" resultType="String">
+		select email from trade where t_no = #{t_no} 
+	</select>
+	
+	<select id="getOffer" parameterType="String" resultType="Integer">
+		
+	</select>
+	
+	
+</mapper>

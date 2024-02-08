@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+/* window.onload = function(){
+	$('#result1 h2')
+	
+}
+
+
+$(document).ready(function(){
+	$('#result1 h2')
+	
+}) */
+
+//$(function(){
+$(() =>{
+	
+	//보이기 버튼 클릭시
+	$('#bshow').on('click',function(){
+		
+		//전체 H2를 보이기
+		$('#result1 h2').show();
+		
+		//버튼은 감추기
+		$(this).hide();
+//		$(this).css('display','none');
+	})
+	
+		
+	
+	
+	
+
+	$('#result1 h2').on('click', function(){
+		
+//		this.style.display = "none";
+		
+//		$(this).css('display','none');
+
+		$(this).hide();
+		
+		//비교 - 다 사라 졌는지 비교 남은 갯수가 0인지
+		
+		if($('#result1 h2:visible').length<1){
+			
+			$('#bshow').show();
+//			$('#bshow').css('display','block');
+			
+		
+		}
+	})		
+})
+
+
+</script>
+<style>
+
+#bshow{
+display : none;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="보이기" id="bshow">
+<br><br>
+<div id="result1">
+<h2>클릭하면 사라집니다1</h2>
+<h2>클릭하면 사라집니다2</h2>
+<h2>클릭하면 사라집니다3</h2>
+<h2>클릭하면 사라집니다4</h2>
+<h2>클릭하면 사라집니다5</h2>
+<h2>클릭하면 사라집니다6</h2>
+<h2>클릭하면 사라집니다7</h2>
+<h2>클릭하면 사라집니다8</h2>
+<h2>클릭하면 사라집니다9</h2>
+<h2>클릭하면 사라집니다10</h2>
+</div>
+</div>
+</body>
+</html>

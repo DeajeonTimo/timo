@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$( ()=>{
+	
+	$('#btn1').on('click',function(){
+		//title속성의 값이 korea인 요소를 선택
+		$('p[title=korea]').css('background','pink');
+		//title속성을 가진 p요소를 선택
+		$('p[title]').css('color', 'blue');
+		
+		//type 속성이 passward인 요소의 테두리 변경
+		$('input[type=password]').css('border','2px dotted red');
+		
+		//class 속성에 hello글자가 포함된 요소선택
+//		$("p[class*=hello]").css()
+//		$('input[class*=hello]').css()
+		
+//		$('p[class*=hello]','input[class*=hello]').css('border','5px double green');
+		
+		$('*[class*=hello]').css('border','5px double green')
+		//class 속성에 hello단어가 포함된 요소선택 
+		$('*[class~=hello]').css('background','skyblue');
+	})
+	
+	$('#btn2').on('click',function(){
+		//input  요소 테두리 lime , 배경색  핑크
+		$('#result2 input').css({'border' : '4px solid lime',
+								 'background' : 'pink'});
+		//input   type이 button 인 요소 배경색 노란
+		$('input[type=button]').css('background', 'yellow');
+		//Button  요소와 input   type이 button 인 요소 배경색 하늘색
+		$('button, input[type=button]').css('background','blue');
+		//Type이 submit 요소의 배경색 녹색
+		$('*[type=submit]').css('background','green');
+		//Type이 reset인 요소의 배경색 노랑 
+		$('*[type=reset]').css('background','yellow');
+		//Type이 text, password 인 요소의 테두리 파랑
+		$('*[type=text], *[type=password]');
+		//Type이 file, image인요소의 테두리 빨강
+		$('*[type=file],type=[image]');
+
+	})
+	
+	
+	
+})
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn1">
+<br><br>
+<div id="result1">
+ <p class="hellojava"> 일반 문단입니다 </p>
+ <p title="툴팁으로 보입니다"> 타이틀을 가지고 있는 문단입니다 </p>
+ <p title="korea"> 일반 문단입니다 </p>
+   회원번호  <input class="hello html" type="text"><br>
+   비밀번호  <input type="password"><br><br>
+ <input type="button" value="확인">
+</div>
+</div>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn2">
+<br><br>
+<div id="result2">
+	<form action="속성선택.jsp" method="post"> 
+		Text : 
+			<input type="text"/><br> 
+		Password : 
+			<input type="password" /><br><br> 
+		Radio : 
+			<input type="radio" name="radioGroup" id="radioA" value="A"/> A 
+			<input type="radio" name="radioGroup" id="radioB" value="B"/> B<br><br> 
+		Checkbox : 
+			<input type="checkbox" name="checkboxes" id="checkbox1" value="1"/> 1 
+			<input type="checkbox" name="checkboxes" id="checkbox2" value="2"/> 2<br><br> 
+		Textarea : 
+			<br> <textarea rows="15" cols="50" id="myTextarea" id="myTextarea"></textarea><br><br> 
+		Image : 
+			<input type="image" src="../images/check.png"><br><br> 
+		File : 
+			<input type="file"><br><br> 
+		Buttons : 
+			<button type="button" id="normalButton">Normal</button> 
+			<button type="submit" id="submitButton">Submit</button> 
+			<button type="reset" id="resetButton">Reset</button> <br><br>
+			<input type="button" value="일반버튼"> 
+			<input type="submit" value="전송버튼"> 
+			<input type="reset" value="초기화버튼"> <br><br>
+	</form>
+
+</div>
+</div>
+</body>
+</html>

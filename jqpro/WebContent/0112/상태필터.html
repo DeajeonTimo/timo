@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	
+	$('input[name=id]').on('change',()=>{
+		
+		//name="disSelect" 요소의 상태값을 사용 가능(disabled=false)으로 변경
+		//상태 값을 바꾸는 메소드 - prop('상태이름',true/false)
+		$('select[name=disSelect]').prop('disabled',false);
+		
+	})
+	
+	
+	$('#btn1').on('click',(a)=>{
+//		alert(a.target.tagName);
+//		event.target.tagName
+
+		//사용 가능한 요소 선택
+		$('#result1 form *:enabled').css('background','pink');
+		
+		//사용 불가능한 요소 선택
+		$('#result1 form *:disabled').css('border','3px solid red');
+		
+	})
+	
+})
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn1">
+<br><br>
+<div id="result1">
+	<form action="상태필터.jsp" method="post"> 
+		<input type="text" name="id" value="a001"><br>
+		<input type="password" name="pass"  ><br>
+		<input type="text" name="name" value="홍길동" disabled="disabled"><br>
+		
+		<select name="disSelect" disabled>
+		      <option>Option1</option>
+		      <option>Option2</option>
+		      <option>Option3</option>
+		      <option>Option4</option>
+		</select>
+		<br>
+		<textarea name="enTextarea" rows=10 cols=20 >text</textarea><br>
+		<input type="button" value="확인"  onclick="alert('hello!!')"> <br>
+		<input type="submit">
+	</form>
+
+</div>
+</div>
+</body>
+</html>

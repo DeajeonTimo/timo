@@ -1,0 +1,35 @@
+package mybatis.config;
+
+import java.io.IOException;
+import java.io.Reader;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+public class MybatisUtil {
+		private static SqlSessionFactory sqlSessionFactory;
+
+		static {
+			Reader rd = null ; 
+
+			try {
+				rd = Resources.getResourceAsReader("mybatis/config/mybatis-config.xml");
+				sqlSessionFactory = new SqlSessionFactoryBuilder().build(rd);
+
+			} catch (Exception e) {
+				System.out.println("mybatis 초기화 실패");
+				e.printStackTrace();
+			}finally {
+				// 스트림 객체 닫기
+				if(rd!=null) try {rd.close();}catch(IOException e) {}
+			}
+		}
+		//SqlSesstion 객체를 반환하는 메서드 발생
+		public synchronized static SqlSession getSqlSession() {
+			SqlSession session = sqlSessionFactory.openSession(false);
+			return session;
+		}
+	
+}

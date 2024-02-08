@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"  href="../css/public.css">
+
+
+<script>
+function calc(){
+	
+	//html요소 접근 
+	var vprice =  document.getElementById('price');
+	var vprice = document.querySelector('#price');
+	
+	 vqty  = document.getElementById('qty');
+	 vqty = document.querySelector('#qty');
+	
+	//요소에서 값을 가져오기  - String
+	priceValue =   vprice.value;
+	qtyValue  = vqty.value;
+	
+	//연산
+	 result =   parseInt(priceValue ) *  parseInt(qtyValue);
+	
+	//출력 
+	alert("결과는 " + result + "입니다");
+	
+	/* 
+	//---------출력요소 접근
+	vres = document.getElementsByClassName('res');
+	
+	//출력내용 
+	pr = "결과는 <span>" + result + "</span>입니다"
+	
+	//출력
+	vres[0].innerHTML = pr; */
+	///-------------------------------------//
+	
+	//출력요소 접근
+	vres2 = document.querySelector('.res');
+	//출력내용 
+	pr = "결과는 <span>" + result + "</span>입니다"
+
+	//출력
+	vres2.innerHTML = pr;
+	
+}
+</script>
+<style>
+span{
+   background-color : pink;
+   font-size : 1.5rem;
+}
+</style>
+
+</head>
+<body>
+<pre>
+  button클릭시 calc() 함수를 호출하여 
+  입력한  값을 얻어서 처리한다 
+  결과를  class=res요소에 출력한다 
+</pre>
+<form>
+ <label for="price">가격</label>
+<!--  <input type="text" name="price" id="price" placeholder="가격"><br> -->
+ <input type="number" name="price" id="price" placeholder="가격"><br>
+ 
+ 
+ <label for="qty">수량</label>
+ <!-- <input type="text" name="qty" id="qty" placeholder="수량"><br> -->
+ <input type="number" name="qty" id="qty" placeholder="수량"><br>
+ <br>
+ 
+ <input type="button" value="확인" onclick="calc()">
+</form>
+<br><br>
+<div class="res"></div>
+
+</body>
+</html>

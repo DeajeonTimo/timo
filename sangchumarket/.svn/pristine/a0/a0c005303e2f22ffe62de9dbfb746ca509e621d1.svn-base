@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<!--
+	작성자 : 김보영
+	메인에서 사용되는 모든 쿼리들
+
+  -->
+
+<mapper namespace="mainProd">
+	
+	<!--인기상품을 조회하기위해 조회수와 찜횟수를 반환하는 쿼리-->
+	<select id="hotItemRank" resultType="mainProdVO" parameterType="mainProdVO">
+		<![CDATA[	
+		SELECT 
+			TB.T_NO
+			,T.C_MIDDLECAT
+			,TB.TB_TITLE
+			,TO_CHAR(TB.TB_PRICE , 'FM999,999,999,999,999') AS TB_PRICE
+			,TB.TB_OFFER
+			,TB.TB_CNT
+			,NVL(c.CNT,0) + tb.tb_cnt AS hot
+			,CASE 
+				WHEN (SYSDATE-T.T_DATE)*24 < 1 THEN TRUNC((SYSDATE-T.T_DATE)*24*60)||'분 전'
+				WHEN (SYSDATE-T.T_DATE)*24 < 24 THEN TRUNC((SYSDATE-T.T_DATE)*24)||'시간 전'
+				WHEN (SYSDATE-T.T_DATE)*24 < 168 THEN TRUNC(SYSDATE-T.T_DATE)||'일 전'
+			ELSE TO_CHAR(T.T_DATE) END AS T_DATE
+			,decode(d.t_no,Null,'N','Y') AS jjim
+		FROM T_BOARD TB
+		INNER JOIN TRADE T
+		ON TB.T_NO = T.T_NO
+		LEFT OUTER JOIN (
+			SELECT t_no, count(*) cnt FROM T_JJIM GROUP BY t_no
+				) c
+			ON tb.t_no = c.t_no
+		LEFT OUTER JOIN (
+			SELECT t_no, email FROM T_jjim WHERE email=#{email})d
+			ON tb.T_NO = d.t_no
+		WHERE t.T_STATE=0	
+		ORDER BY hot DESC	
+		]]>
+	 </select>
+	 
+	 <!-- 최근등록 상품을 조회하기 위한 쿼리-->
+	<select id="recentProd" parameterType="mainProdVO" resultType="mainProdVO">
+		<![CDATA[
+		SELECT 
+			TB.TB_TITLE
+			,TB.T_NO
+			,T.C_MIDDLECAT
+			,TO_CHAR(TB.TB_PRICE , 'FM999,999,999,999,999') AS TB_PRICE
+			,TB.TB_OFFER
+			,TB.TB_CNT
+			, CASE 
+				WHEN (SYSDATE-T.T_DATE)*24 < 1 THEN TRUNC((SYSDATE-T.T_DATE)*24*60)||'분 전'
+				WHEN (SYSDATE-T.T_DATE)*24 < 24 THEN TRUNC((SYSDATE-T.T_DATE)*24)||'시간 전'
+				WHEN (SYSDATE-T.T_DATE)*24 < 168 THEN TRUNC(SYSDATE-T.T_DATE)||'일 전'
+			ELSE TO_CHAR(T.T_DATE) END AS T_DATE
+		FROM TRADE T, T_BOARD TB
+		WHERE TB.T_NO = T.T_NO AND T.T_STATE = 0
+		ORDER BY T.T_DATE DESC
+		]]>
+	</select>
+	
+	
+	<update id="updateInterest" parameterType="mainProdVO" >
+	
+		UPDATE U_INTEREST
+		SET C_MIDDLECAT= #{c_middlecat}
+		WHERE EMAIL= #{email}
+	
+	</update>
+	
+	<!--관심카테고리를 변경추가하기 위한 1,2 -->
+	<delete id="deleteInterest" parameterType="mainProdVO">
+	
+		DELETE 
+		FROM U_INTEREST
+		WHERE EMAIL=#{email} 
+	</delete>
+	
+	<insert id="insertInterest" parameterType="mainProdVO">
+		INSERT INTO U_INTEREST
+				(EMAIL, C_MIDDLECAT)
+		VALUES(#{email},#{c_middlecat})
+	
+	
+	
+	</insert>
+	
+	
+	<!-- 설정한 관심카테고리의 상품만 출력하는 쿼리 -->
+	<select id="selectUserCate" resultType="mainProdVO" parameterType="mainProdVO">
+	<![CDATA[
+		SELECT A.* FROM (
+	    SELECT ROWNUM AS RNUM
+	     	, B.*  
+	 	FROM (
+			SELECT 
+				TB.TB_TITLE
+				,TB.T_NO
+				,T.C_MIDDLECAT
+				,TO_CHAR(TB.TB_PRICE , 'FM999,999,999,999,999') AS TB_PRICE
+				,TB.TB_OFFER
+				,TB.TB_CNT
+				, CASE 
+					WHEN (SYSDATE-T.T_DATE)*24 < 1 THEN TRUNC((SYSDATE-T.T_DATE)*24*60)||'분 전'
+					WHEN (SYSDATE-T.T_DATE)*24 < 24 THEN TRUNC((SYSDATE-T.T_DATE)*24)||'시간 전'
+					WHEN (SYSDATE-T.T_DATE)*24 < 168 THEN TRUNC(SYSDATE-T.T_DATE)||'일 전'
+				ELSE TO_CHAR(T.T_DATE) END AS T_DATE
+				,DECODE(D.T_NO,NULL,'N','Y') AS JJIM
+			FROM TRADE T
+			INNER JOIN T_BOARD TB
+			ON TB.T_NO = T.T_NO
+			INNER JOIN (
+				SELECT EMAIL, C_MIDDLECAT FROM U_INTEREST
+					) C
+				ON T.C_MIDDLECAT = C.C_MIDDLECAT
+			LEFT OUTER JOIN (
+				SELECT T_NO, EMAIL FROM T_JJIM WHERE EMAIL=#{email}) D
+				ON TB.T_NO = D.T_NO
+			WHERE C.EMAIL=#{email}
+			ORDER BY T.T_DATE DESC
+			) B
+	    WHERE ROWNUM <= #{end} ) A 
+	  	WHERE A.RNUM >= #{start}
+	]]>
+	</select>
+	
+	
+	<!-- 관심카테고리 글 갯수 구하기 -->
+	<select id="selectUserCateCount" resultType="int" parameterType="mainProdVO">
+		SELECT count(*) 
+		FROM TRADE T
+		INNER JOIN T_BOARD TB
+		ON TB.T_NO = T.T_NO
+		INNER JOIN (
+			SELECT EMAIL, C_MIDDLECAT FROM U_INTEREST
+				) C
+			ON T.C_MIDDLECAT = C.C_MIDDLECAT
+		LEFT OUTER JOIN (
+			SELECT t_no, email FROM T_jjim WHERE email=#{email}) d
+			ON tb.T_NO = d.t_no
+		WHERE C.EMAIL=#{email}
+	</select>
+	 
+	 
+	 <!--최근본상품 출력-->
+	 <select id="recentView" parameterType="mainProdVO" resultType="mainProdVO">
+	 	<![CDATA[
+		SELECT DISTINCT
+			T_NO
+			,EMAIL
+			,TB_TITLE
+			,TO_CHAR(V_DATE,'yyyymmdd') AS V_DATE
+		from(
+			select
+				a.T_NO
+				,a.V_DATE
+				,a.EMAIL
+				,b.TB_TITLE
+			FROM U_VIEW a
+			INNER JOIN T_BOARD b
+			ON a.T_NO = b.T_NO
+			WHERE email = #{email}
+				AND TO_CHAR(V_DATE,'yyyymmdd') =TO_CHAR(SYSDATE, 'yyyymmdd')
+			ORDER BY V_DATE DESC
+		)	
+		WHERE rownum<4	
+
+		]]>
+	 </select>
+	
+	 <!-- 찜추가 -->
+	 <insert id="insertJjim" parameterType="mainProdVO" >
+	 	INSERT INTO T_JJIM	(EMAIL, T_NO)
+		VALUES(#{email}, #{t_no})
+	 </insert>
+	 
+	 <!-- 찜 삭제 -->
+	 <delete id="deleteJjim" parameterType="mainProdVO">
+	 	DELETE FROM T_JJIM
+		WHERE EMAIL=#{email} AND T_NO=#{t_no}
+	 </delete>
+	 
+	 
+	 
+
+</mapper>	

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+let str = "I Love Korea Happy New Year"
+
+proc1= () =>{
+	
+	res  = `전체문자열 : ${str} <br>`;
+	
+	txt = str.substring(13);
+	
+	//console.log(txt);
+	
+	res+= `추출문자열 str.substring(13) : ${txt}`;
+	
+	document.getElementById('result1').innerHTML = res;
+}
+
+proc2= () =>{
+	res = `전체 문자열 : ${str} <br>`;
+	
+	txt = str.substr(13);
+	
+	res+= ` 추출 문자열 str.substr(13) : ${txt}`;
+	
+	document.getElementById('result2').innerHTML = res;
+	
+}
+
+proc3= () =>{
+	res = `전체 문자열 : ${str} <br>`;
+	
+	txt = str.slice(13);
+	
+	res+= ` 추출 문자열 str.slice(13) : ${txt}`;
+	
+	document.getElementById('result3').innerHTML = res;
+	
+}
+
+proc4= () =>{
+	arr = str.split(" ");
+	
+	//console.log(str.length, arr.length);
+	
+	vtxt="";
+	
+	for(i=0; i<str.length; i++){
+		vtxt += i+"번째 : " + str[i] + "<br>";
+	}
+	
+	document.getElementById('result4').innerHTML = vtxt;
+	
+	
+	vtxt = "";
+	for(i=0; i<arr.length; i++){
+		vtxt += `${i} 번째 : ${arr[i]} <br>`; 
+	}
+	
+	document.getElementById('result4').innerHTML = vtxt;
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4>I Love Korea Happy New Year</h4>
+Happy New Year 문자열 추출
+<input type ="button" value="substirng" onclick="proc1()">
+<input type ="button" value="substr" onclick="proc2()">
+<input type ="button" value="slice" onclick="proc3()">
+<br><br>
+<div id="result1"></div>
+<div id="result2"></div>
+<div id="result3"></div>
+</div>
+
+<div class="box">
+<h4>문자열을 배열로 변환</h4>
+
+<input type ="button" value="split" onclick="proc4()">
+
+<br><br>
+<div id="result4"></div>
+
+</div>
+</body>
+</html>

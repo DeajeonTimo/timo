@@ -1,0 +1,93 @@
+package sangchu.login.controller;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import org.apache.ibatis.javassist.bytecode.stackmap.BasicBlock.Catch;
+
+import sangchu.images.service.IImagesService;
+import sangchu.images.service.ImagesServiceImpl;
+import sangchu.images.vo.ImagesVO;
+
+/**
+ * Servlet implementation class ForTestSignup02
+ */
+@WebServlet("/forTestSignup02.do")
+public class ForTestSignup02 extends HttpServlet {
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+
+		String email = request.getParameter("email");
+		String jumin1 = request.getParameter("jumin1");
+		String jumin2 = request.getParameter("jumin2");
+		String nickName = request.getParameter("inputNickname");
+		String tel = request.getParameter("tel");
+//		int addrX = (int)(Double.parseDouble(request.getParameter("addrX"))) ;
+//		int addrY = (int)(Double.parseDouble(request.getParameter("addrY"))) ;
+		String marketing = request.getParameter("marketing");
+
+		
+		System.out.println(email); // 넘어옴
+		System.out.println(jumin1);
+		System.out.println(jumin2);
+		System.out.println(nickName);
+		System.out.println(tel);
+		System.out.println(request.getParameter("addrX")); // ok
+		System.out.println(request.getParameter("addrY")); // ok
+		System.out.println(marketing); // on off 로 넘어옴
+		
+		String[] catCheckbox = request.getParameterValues("catCheckbox");
+		
+		for(int i =0; i<catCheckbox.length; i++) {
+			String str = catCheckbox[i];
+			System.out.println(str);
+		}
+		
+		
+		System.out.println(catCheckbox);
+//
+//		Part file = request.getPart("file");
+//		System.out.println(file);
+//
+//		if (file != null) {
+//			String fileName = file.getSubmittedFileName(); // 업로드된 파일의 원래 파일이름
+//			String uploadPath = "C:\\Users\\djs03\\OneDrive\\사진" + fileName;
+//
+//			try {
+//				InputStream in = file.getInputStream(); // part 객체에서 업로드된 파일의 입력 스트림 얻기
+//				FileOutputStream out = new FileOutputStream(uploadPath); // 서버에 업로드된 파일을 저장하기 위한 출력스트림
+//
+//				byte[] buffer = new byte[1024];
+//				int byteRead;
+//
+//				while ((byteRead = in.read(buffer)) != -1) {// inputStream에서 buffer 크기만큼 데이터를 읽어옴
+//					out.write(buffer, 0, byteRead);
+//				}
+//				out.close();
+//
+//				ImagesVO imagesVO = new ImagesVO();
+//
+//				imagesVO.setImg_code(email);
+//				imagesVO.setImg_src(email);
+//
+//				IImagesService serviceImg = ImagesServiceImpl.getInstance();
+//
+//				int res = serviceImg.uploadUserImage(imagesVO);
+//				System.out.println("파일 업로드 결과(성공1, 실패0) ==> " + res);
+
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+
+	}
+	}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src ="../js/jquery-3.7.1.min.js"></script>
+<script>
+proc1 = () =>{
+	//문자열생성 - textNode로 생성 
+	vtext = document.createTextNode("Hello");
+	
+	//p태그 생성 
+	vp = document.createElement('p');
+	vp.setAttribute("class","pp");
+	vp.onclick = function(){
+		alert("hello JavaScript");
+	}
+		
+	//p태그에 vtext를 추가 
+	vp.appendChild(vtext);
+	
+	//result1접근 - p태그를 추가 
+	vres = document.getElementById('result1');
+	vres.appendChild(vp);
+	
+}
+
+proc2 = () =>{
+	
+	//새로운 태그 만들기
+	vhtml = $('<p class="pp" onclick="hello()">Hello</p>');
+	
+	//result2에 추가
+	$('#result2').append(vhtml);
+}
+
+hello = () =>{
+	alert("hello jQurey~~");
+}
+
+proc3 = () =>{
+	
+	//vp = $('<p></p>',{});
+	vp = $('<p/>',{
+		'class' : 'pp',
+		'id'    : 'p1',
+		'text'  : 'hello',
+		'click' : function(){
+			
+			cr = Math.floor(Math.random()*256);
+			cg = Math.floor(Math.random()*256);
+			cb = Math.floor(Math.random()*256);
+			
+			//alert("hello");
+//			this.style.color = `rgb(${cr},${cg},${cb})`;
+			$(this).css('font-size','+=5px');
+			$(this).css('color,`rgb(${cr},${cg},${cb})`')
+		}
+	})
+	
+	// result3에 추가
+	$('#result3').append(vp);
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" onclick="proc2()">
+<br><br>
+<div id="result2"></div>
+</div>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" onclick="proc3()">
+<br><br>
+<div id="result3"></div>
+</div>
+</body>
+</html>

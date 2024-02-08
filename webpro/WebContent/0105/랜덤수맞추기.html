@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+answer = Math.floor(Math.random()*100+1);
+console.log(answer);
+count = 0;
+input = "";
+test = () =>{
+	
+	hint = "";
+	guess = document.getElementById('number').value;
+	if(answer > guess){
+		hint = "더 큰수를 입력하세요"								
+	}else if(answer < guess){
+		hint = "더 작은수를 입력하세요"									
+	}else{
+		hint = "정답입니다."												
+	}
+	input += guess + " ";
+	count ++;
+	
+	total = "입력한 값  : " + input + "<br>" + "입력 횟수 : " +count + "<br>" + "정답 여부 : " + hint
+	
+	document.getElementById('hint').innerHTML = total;
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h1>Number Guess</h1>
+  <p>1부터 100 사이 숫자 입력</p>
+  <input id="number" type="text">
+  <button type="button" onclick="test()">추측</button>
+  <p id="hint"></p>
+
+</div>
+</body>
+</html>

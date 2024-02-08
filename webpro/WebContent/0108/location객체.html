@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+proc1 = () =>{
+	vhref = location.href;
+	vproto = location.protocol;
+	vhostname = location.hostname;
+	vport = location.port;
+	vhost = location.host;
+	
+	//출력내용
+	
+	str = `href = ${vhref} <br>`;
+	str+= `protocol : ${vproto} <br>`;
+	str+= `hostname : ${vhostname} <br>`;
+	str+= `port : ${vport} <br>`;
+	str+= `host : ${vhost} <br>`;
+	
+	document.getElementById("result1").innerHTML = str;
+}
+
+lohref = () =>{
+	
+	location.href = "window_opener.html"
+	
+}
+
+goPage = () =>{
+	//입력
+	
+	userName = prompt("이름입력");
+	location.href = "loctest.jsp?name="+ userName;
+}
+
+goReload = () =>{
+	//랜덤으로 발생하는 문자열을 result5에 출력
+	
+	arr = ["나성진","나호진"];
+	
+	rand = Math.floor(Math.random()*arr.length);
+	
+	res = "<h1>" + arr[rand] + "<h1>";
+	
+	vreout = document.getElementById('result5');
+	
+	
+	vreout.innerHTML = res;
+	vreout.style.color = "pink";
+	vreout.style.fontSize = "1.5rem";
+	
+	setTimeout(function(){
+		location.reload();
+	},2000)
+	
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4></h4>
+특정 페이지로 이동(버튼에서 직접) : <input type="button" value ="페이지 이동" onclick="location.href='timeout_interval.html'"><br>
+특정 페이지로 이동(script함수에서 지정) : <input type="button" value ="페이지 이동" onclick="lohref()">
+<br><br>
+<div id="result2"></div>
+</div>
+
+<div class="box">
+<h4></h4>
+
+a태그에서 새창열기 방법<br>
+
+1. 기본 a 태그 이용하여 새창열기
+<a href="window_opener.html">새창열기1</a><br>
+
+2.a태그의 href에서 js함수호출
+<a href="javascript:goPage()">새창열기2</a><br>
+
+
+3.js함수호출 - location.href
+<a href="#" onclick = "goPage()">새창열기3</a><br>
+
+4.onclick = "location.href"
+<a href="#" onclick = "location.href='loctest.jsp?name=korea'">새창열기4</a>
+<br><br>
+<div id="result3"></div>
+</div>
+
+
+<div class="box">
+<h4></h4>
+<form action="loctest.jsp" method="post">
+<input type ="hidden" value="홍길동" name="name">
+<input type ="submit" value="새창열기">
+<input type ="button" value="새창열기"  name="홍길동" onclick="location.href='loctest.jsp'">
+</form>
+<br><br>
+<div id="result4"></div>
+</div>
+
+<div class="box">
+<h4></h4>
+새로운 페이지 이동  - assign() 히스토리에 의해 뒤로가기 가능
+<input type ="button" value="새창열기" onclick="location.assign('loctest.jsp?name=강감찬')"><br>
+새로운 페이지 이동  - replace() 뒤로가기 불가능
+<input type ="button" value="새창열기" onclick="location.replace('loctest.jsp?name=강감찬')"><br>
+현재 문서를 리로드 - reload()
+<input type ="button" value="새창열기" onclick="goReload()"><br>
+<br><br>
+<div id="result5"></div>
+</div>
+
+</body>
+</html>

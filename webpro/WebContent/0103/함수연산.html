@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+
+<script>
+proc1 = (op) =>{
+	
+	//입력받은 값을 가져온다.
+/* 	value1 = parseInt(document.getElementById('x').value);
+	value2 = parseInt(document.getElementById('y').value);
+	 */
+	
+	value1 = parseInt(document.getElementById('sp1').innerHTML);
+	value2 = parseInt(document.getElementById('sp2').innerHTML);
+	
+	 result = 0;
+	
+	
+	//연산자 비교
+	switch(op){
+	case '+' : result = value1+value2;
+		break;
+	case '-' :result = value1-value2;
+		break;
+	case '*' :result = value1*value2;
+		break;
+	case '/' :result = value1/value2;
+		break;
+	}
+	
+	/* document.getElementById('res').value = result; */
+	document.getElementById('sp3').innerHTML = result;
+	
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<!-- x : <input type = "text" id="x"><br>
+y : <input type = "text" id="y"><br>
+결과 : <input type="text" id="res"><br> -->
+<p>첫번째 값 :<span id="sp1">1</span> </p>
+<p>두번째 값 :<span id="sp2">2</span> </p>
+<p>결과 :<span id="sp3"></span> </p>
+ 
+<input type ="button" value="확인+" onclick="proc1('+')">
+<input type ="button" value="확인-" onclick="proc1('-')">
+<input type ="button" value="확인*" onclick="proc1('*')">
+<input type ="button" value="확인/" onclick="proc1('/')">
+<br><br>
+<div id="result1"></div>
+</div>
+</body>
+</html>

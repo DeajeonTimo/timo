@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"  href="../css/public.css">
+
+<style>
+body *{
+ }
+pre{ background-color : lightgreen;}
+body{ min-width : 1000px;}
+form{width : 40%; margin : 50px; border : 2px double blue; padding : 20px;
+}
+
+label.lab{ 
+   display : inline-block; 
+    width : 80px;  
+    height : 30px;
+    
+    margin-left : 50px;
+}
+.sub{
+  margin-left : 50px;
+}
+#text{
+   vertical-align: top;
+}
+/* input[class=sub]{
+} */
+input[name=addr]{
+  background-color : pink;
+}
+#addr + input{
+  border : 2px solid red;
+}
+#addr ~ input{
+   border : 3px dotted green;
+}
+/* input#addr
+input[id=addr] */
+</style>
+</head>
+<body>
+<pre>
+ 입력후 전송 하면 ~~.jsp로 전송한다 
+ 전송 하기 위해서는 input 필드에 반드시 name속성이 있어야 한다 
+ title   : 마우스를 요소 위에 올려놓으면 네모박스가 나타남
+ required : 필수항목
+ autofocus : 실행시 커서의 위치를 설정
+ pattern  : 정규식
+ placeholder :  input 필드에 나타나는 예시, 제목 , 내용
+ readonly : 값을 변경 할 수 없는 필드, 반드시 value속성이 설정 
+</pre>
+
+ <form action="테스트.jsp"  method="post">
+
+  
+  <label  class="lab">이름</label>
+  <input  name="name"  title="홍길동" autofocus   required="required"><br>
+  
+  <label class="lab" id="addr">주소</label>
+  <input name="addr"><br>
+  
+  <label class="lab">이메일</label>
+  <input name="email" ><br>
+  
+  <label class="lab">성별</label>
+  <input type="radio" name="gend" value="남자" checked="checked">남자
+  <input type="radio" name="gend" value="여자" checked="checked">여자 <br>
+ 
+  <label id="text" class="lab">내용</label>
+  <textarea name="area" rows="15" cols="30"></textarea>
+  <br>
+  <br>
+  <input type="submit" class="sub" value="전송">
+  <input type="reset">
+  
+</form>
+ 
+ 
+</body>
+</html>

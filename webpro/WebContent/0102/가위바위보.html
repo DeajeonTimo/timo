@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+proc1 = () =>{
+	//입력 - 첫번째
+	first=prompt("첫번째 입력","가위바위보");
+	
+	
+	//입력  - 두번째
+	second =prompt("두번째입력","가위바위보")
+	
+	
+	
+	//비교
+	if(first==second){
+		res = "비겼습니다."
+	}else if(first=="가위"&&second=="바위"||
+			 first=="바위"&&second=="보"||
+			 first=="보"&&second=="가위"){
+		
+		res = "second가 이겼습니다."
+	}else{
+		res = "first가 이겼습니다."
+	}
+	//출력내용작성
+	
+/* 	str = "첫번째 사람 : " + first + "<br>";
+	str += "두번째 사람 : " + second + "<br>";
+	str += "결과 :" + res + "<br>" ;  */
+	
+	str= `첫번째 사람 : ${first} <br>`;
+	str+= `두번째 사람 : ${second} <br>`;
+	str+= `결과 : ${res} <br>`;
+	
+	//벡틱(`)을 이용한 템플릿 문자열
+	//일반 문자열과 변수를 한번에 사용 할 수 있다.
+	//`${변수명} 문자~!~!      줄바꿈도 그대출력`
+	
+	//출력장소 검색 - 출력
+	document.getElementById('result1').innerHTML = str;
+}
+</script>
+</head>
+<body>
+<div class="box">
+<h4>가위바위보 입력</h4>
+<input type="button" value="확인" onclick="proc1()">
+<div id="result1"></div>
+</div>
+
+</body>
+</html>

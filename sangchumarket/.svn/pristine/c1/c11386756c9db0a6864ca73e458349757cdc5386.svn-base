@@ -1,0 +1,129 @@
+package sangchu.mypage.vo;
+
+/*
+	최초 작성자 : 김석호
+	최초 작성일 : 2023.08.12 11:26
+	
+	최근 수정자 : 김석호
+	최근 수정일 : 2023.08.21 01:03
+	
+	수정 내역
+	2023.08.18 14:55 - 김석호 : 채팅방 번호 추가
+	2023.08.20 14:06 - 김석호 : 거래기록 테이블 데이터접근용 거래위치 추가
+	2023.08.21 00:46 - 김석호 : 평가점수 String > int 데이터타입 변경
+	2023.08.21 01:03 - 김석호 : 데이터 타입 롤백
+	
+	거래 이력 및 거래후기, 거래 평점 정보를 받아올 VO객체입니다
+*/
+public class TradeLogVO {
+	
+	// 거래글 번호
+	private String t_no;
+	
+	// 거래글 제목
+	private String tb_title;
+	
+	// 최종 거래가
+	private String tl_finalprice;
+	
+	// 거래일
+	private String tl_tdate;
+	
+	// 게시글 작성자
+	private String email;
+	
+	// 작성자가 받은 평점
+	private String sc_taken;
+	
+	// 작성자가 준 평점
+	private String sc_given;
+	
+	// 채팅방 번호
+	private String c_no;
+	
+	// 거래위치
+	private double tl_loc;
+	private double tl_loc2;
+	
+
+	public String getT_no() {
+		return t_no;
+	}
+
+	public void setT_no(String t_no) {
+		this.t_no = t_no;
+	}
+
+	public String getTb_title() {
+		return tb_title;
+	}
+
+	public void setTb_title(String tb_title) {
+		this.tb_title = tb_title;
+	}
+
+	public String getTl_finalprice() {
+		return tl_finalprice;
+	}
+
+	public void setTl_finalprice(String tl_finalprice) {
+		this.tl_finalprice = tl_finalprice;
+	}
+
+	public String getTl_tdate() {
+		return tl_tdate;
+	}
+
+	public void setTl_tdate(String tl_tdate) {
+		this.tl_tdate = tl_tdate;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getSc_taken() {
+		return sc_taken;
+	}
+
+	public void setSc_taken(String sc_taken) {
+		this.sc_taken = sc_taken;
+	}
+
+	public String getSc_given() {
+		return sc_given;
+	}
+
+	public void setSc_given(String sc_given) {
+		this.sc_given = sc_given;
+	}
+
+	public String getC_no() {
+		return c_no;
+	}
+
+	public void setC_no(String c_no) {
+		this.c_no = c_no;
+	}
+
+	public double getTl_loc() {
+		return tl_loc;
+	}
+
+	public void setTl_loc(double tl_loc) {
+		this.tl_loc = tl_loc;
+	}
+
+	public double getTl_loc2() {
+		return tl_loc2;
+	}
+
+	public void setTl_loc2(double tl_loc2) {
+		this.tl_loc2 = tl_loc2;
+	}
+	
+}

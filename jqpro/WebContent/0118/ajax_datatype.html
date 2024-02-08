@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script  src="../js/jquery-3.7.1.min.js"></script>
+<Script>
+$(()=>{
+	
+	$('#obarr').on('click',()=>{
+		$.getJSON(
+				'../0117/obarr.jsp',
+				function(res){
+					code = "";
+					$.each(res,function(index,str){
+						 code += `${index} 번째정보 <br>`;
+						 code += `이름 : ${str.name} <br>`;
+						 code += `주소 : ${str.addr} <br>`;
+						 code += `전화번호 : ${str.tel} <br><br>`;
+					})
+					$('#result4').html(code);
+				}
+				
+		
+		
+		)
+	})
+	
+	
+	
+	$('#jobj').on('click',()=>{
+		$.ajax({
+			url : '../0117/obj.jsp',
+			type : 'get',
+			success : function(res){
+				 code = `이름 : ${res.name} <br>`;
+				 code += `주소 : ${res.addr} <br>`;
+				 code += `전화번호 : ${res.tel} <br>`;
+
+				 $('#result3').html(code);
+			},
+			error : function(xhr){
+				alert("상태 :" + xhr.status);
+			},
+			dataType : 'json'
+		})
+	})
+	
+	
+	
+	
+	$('#arr').on('click',()=>{
+		$.ajax({
+			url : '../0117/arr.jsp',
+			type : 'get',
+			success : function(res){
+				code = "<ol>";
+				$.each(res,function(i,val){
+	
+					code+= "<li>"+ val +"</li>";
+				})
+			 	code+= "</ol>";
+			 $('#result2').html(code);
+			},
+			error : (xhr) =>{
+				alert("상태 :" + xhr.status);
+			},
+			dataType : 'json'
+		})
+	})
+	
+	
+	
+	
+	$('#text').on('click',()=>{
+		
+		//$.get("aaa.jsp",'id=aaa', function(res){ },'json')
+		
+		//$.getJSON("aaa.jsp",'id=aaa', function(res){ })
+		
+		
+		$.ajax({
+			url : "../0117/text.jsp",
+			type : "get",
+			success : function(res){
+				//res : 응답 데이터
+				
+				res=res.split("/");
+				 
+				 code = "<ul>";	 
+				
+				 res.forEach((str,index)=>{
+					code+= "<li>"+ str+"</li>";
+				 })
+				 
+				 code+= "</ul>";
+				 
+				 $('#result1').html(code);
+			},
+			error : function(xhr){
+				alert('상태 : ' + xhr.status); // 200,404,500,403
+			},
+			dataType : 'text'
+		})
+	})
+})
+</Script>
+<link rel="stylesheet" href="../css/public.css">
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="text" id="text">
+<input type ="button" value="arr" id="arr">
+<input type ="button" value="jsonobj" id="jobj">
+<input type ="button" value="jobarr" id="obarr">
+<br><br>
+<div id="content">
+<div id="result1" class="res"></div>
+<div id="result2" class="res"></div>
+<div id="result3" class="res"></div>
+<div id="result4" class="res"></div>
+
+</div>
+</div>
+</body>
+</html>

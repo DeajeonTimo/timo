@@ -1,0 +1,250 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page isELIgnored="true" %>
+
+<!--   
+
+작성자 : 박민주
+최초 작성일 2023.08.17
+관리자 메인페이지 (adminMypage.jsp) 왼쪽메뉴중 [회원정지일 관리] 선택 시, 로드되는 jsp 입니다.
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>관리자-회원정지일 관리</title>
+</head>
+<script src="<%=request.getContextPath()%>/js/jquery/jquery-3.7.0.min.js"></script>
+<script>
+
+  $(function(){
+	 getStopdateList();
+  
+	 function getStopdateList() {
+			var code="";
+			$.ajax({
+				url		: "<%=request.getContextPath()%>/stopdateList.do",
+				type	: 'get',
+				dataType: 'json',
+				success: function(res) {
+					 if(res.sw=="no"){
+						 alert('계정정지 회원이 존재하지 않습니다.')
+					 }else{ //조회결과 있는경우 => list를 가져와서 출력
+							 $.each(res.datas, function(i, v){
+								code += `
+									 <tr class="report-row">
+						                <td class="align-middle">${v.email}</td>
+						                <td class="align-middle">${v.u_stopdate}</td>
+						                <td><button id="cancelStop" class="cancelStop">해제</button></td>
+						            </tr>` ;
+					 			})///$.each 반복문
+					 }//if-else문 끝
+				$('#listBody').html(code);
+				},
+				error : function(xhr){
+					alert('상태 : ' + xhr.status)
+				}
+			})//ajax 끝
+	  }//function getStopdateList
+  
+	 
+  //일괄해제 버튼 클릭시
+	//   function clearStopdateAll(){
+	// 	var answer = confirm('정말 일괄해제하시겠습니까?');
+	// 		if(answer){
+	// 			$.ajax({
+	<%-- 				 url: "<%=request.getContextPath()%>/clearStopdateAll.do", --%>
+	// 				 type : 'get',
+	// 				 dataType : 'json',
+	// 				 success : function(res){
+	// 					 if(res.sw=="성공"){
+	// 						alert("계정정지 일괄 삭제 완료")
+	// 						$('#listCotent').empty();
+	// 					 }else{ //삭제 실패
+	// 						alert("오류로 인한 일괄 삭제 실패")
+	// 					 }
+	// 				 },
+	// 				 error : function(xhr){
+	// 					 alert("오류 : " + xhr.status)
+	// 				 }
+	// 			 })	
+	// 		}
+	//   }
+  
+  //유저 한명의 정지일 해제
+  function clearStopdate(){
+	var answer = confirm('정말 이 사용자의 정지일을 해제하시겠습니까?');
+	if(answer){
+	  var row = $(this).closest('tr'); //클릭된 버튼이 속한 행
+	  var email = row.find('td:eq(0)').text().trim();
+	  
+	  $.ajax({
+			 url: "<%=request.getContextPath()%>/clearStopdate.do",
+			 type : 'get',
+			 dataType : 'json',
+			 data : {"email" : email},
+			 success : function(res){
+				 if(res.sw=="성공"){
+					alert("정지 해제 완료")
+					$('#content').empty().load('<%=request.getContextPath()%>/userStopDate.do');
+					
+				 }else{ //삭제 실패
+					alert("정지 해제 실패")
+				 }
+			 },
+			 error : function(xhr){
+				 alert("오류 : " + xhr.status)
+			 }
+		 })
+	}
+  }//한명 정지일 해제 function 끝
+  
+  $(document.body).delegate('.cancelStop', 'click', function() {
+	 
+	  var answer = confirm('정말 이 사용자의 정지일을 해제하시겠습니까?');
+		if(answer){
+		  var row = $(this).closest('tr'); //클릭된 버튼이 속한 행
+		  var email = row.find('td:eq(0)').text().trim();
+		  
+		  $.ajax({
+				 url: "<%=request.getContextPath()%>/cancelStopdate.do",
+				 type : 'get',
+				 dataType : 'json',
+				 data : {"email" : email},
+				 success : function(res){
+					 if(res.sw=="성공"){
+						alert("정지 해제 완료")
+						$('#content').empty().load('<%=request.getContextPath()%>/userStopDate.do');
+					 }else{ //삭제 실패
+						alert("정지 해제 실패")
+					 }
+				 },
+				 error : function(xhr){
+					 alert("오류 : " + xhr.status)
+				 }
+			 }) //ajax 끝
+		}//if문 끝 => 대답안하면 아무것도 안함
+  
+  
+  		});
+  
+  })
+    </script>
+
+<style>
+
+  /* Google web font CDN*/
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: normal;
+    }
+    
+    .stopdateUsers_wrap {
+        width: 900px;
+        margin: 100px auto;
+    }
+    
+    .stopdateUsers-title {
+        display: flex;
+        margin-bottom: 30px;
+        align-items: center;
+    }
+    
+    .stopdateUsers-title strong {
+        font-size: 2.3rem;
+    }
+    
+    .stopdateUsers-table  {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .stopdateUsers-table tr {
+        height: 40px;
+    }
+    .stopdateUsers-table th {
+        border-bottom: 1px solid #8a8787;
+        background-color: rgb(233, 233, 233);
+    }
+    .stopdateUsers-table td {
+        text-align: center;
+    }
+    
+    button{
+    font-family: 'Noto Sans KR', sans-serif;
+    }
+     
+    .stopdateUsers-table .top .title {
+        text-align: center;
+    }
+
+    .cancelStop{
+        background-color: rgb(233, 233, 233);
+        width: 100px;
+        height: 30px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.0em;
+        
+    }
+    .cancelStop:hover{
+        background-color: #03cd5eae;;
+        transition: 0.4s ease-out;
+    }
+
+    .cancelStopAll{
+        margin-left: 20px;
+        width: 100px;
+        height: 40px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.0em;
+    }
+
+    .cancelStopAll:hover{
+        background-color: #f45d5dae;
+        transition: 0.4s ease-out;
+    }
+
+    
+    </style>
+
+<body>
+	<div class="stopdateUsers_wrap">
+	
+		<div class="stopdateUsers-title">
+			<div><strong>정지회원목록</strong></div>
+<!--             <div><button id="cancelStopAll" class="cancelStopAll" onclick="clearStopdateAll()">일괄해제</button></div> -->
+		</div>
+
+	  <table class="stopdateUsers-table">
+	  	 <colgroup>
+	  	 	<col width="40%" />
+	  	 	<col width="30%" />
+	  	 	<col width="30%" />
+	  	 </colgroup>
+	  	 <thead>
+	  	  <tr class="report-row">
+                <th class="email">회원이메일</th>
+                <th class="stopdate">정지일</th>
+                <th class="title">정지해제</th>
+          </tr>
+          </thead>
+	   	  <tbody id="listBody">
+          </tbody>
+		</table>	
+	</div>
+	
+</body>
+</html>

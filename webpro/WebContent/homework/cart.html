@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+body{
+	margin: 100px;
+}
+table{
+	border: 3px solid #DCDCDC;
+	border-collapse: collapse;
+}
+td{
+	width: 150px;
+	height: 30px;
+	text-align: center;
+}
+input{
+	height: 25px;
+	text-align: center;
+}
+#h{
+	height: 30px;
+	width: 80px;
+}
+#in{
+	margin: 0px 0px 0px 210px;
+}
+#in2{
+	width: 80px;
+}
+#qty{
+	width: 90px;
+}
+.dd{
+	height: 30px;
+	width: 80px;
+}
+h1{
+margin: 0px 0px 30px 170px;
+}
+a{
+	text-decoration : none;
+	font-color : black;
+}
+</style>
+</head>
+<body>
+<h1>장바구니 페이지</h1>
+<table border="1">
+	<tr >
+		<th class="dd">품목</th>
+		<th>가격</th>
+		<th>수량</th>
+		<th>합계</th>
+	</tr>
+	<tr>
+		<td>컴퓨터 세트</td>
+		<td>2,000,000원</td>
+		<td id="qty"><input type="number" id="in2" value="0"></td>
+		<td><input type="number" value="0"></td>
+	</tr>
+	<tr>
+		<td>티셔츠</td>
+		<td>50,000원</td>
+		<td id="qty"><input type="number" id="in2" value="0"></td>
+		<td><input type="number" value="0"></td>
+	</tr>
+	<tr>
+		<td>음악파일</td>
+		<td>1,000원</td>
+		<td id="qty"><input type="number" id="in2" value="0"></td>
+		<td><input type="number" value="0"></td>
+	</tr>
+	<tr>
+		<td>영화파일</td>
+		<td>5,000원</td>
+		<td id="qty"><input type="number" id="in2" value="0"></td>
+		<td><input type="number" value="0"></td>
+	</tr>
+</table>
+<br>
+<input id="in" type="submit" value="계산">
+<input type="submit" value="구매">
+<input type="reset" value="초기화">
+<br>
+<a id ="bu" href="main.html">Back to Home</a>
+
+</body>
+</html>

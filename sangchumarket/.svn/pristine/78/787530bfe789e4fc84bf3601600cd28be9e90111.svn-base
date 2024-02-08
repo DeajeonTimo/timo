@@ -1,0 +1,19 @@
+package sangchu.adminMode.dao;
+
+import sangchu.main.vo.MemberVO;
+
+public interface IAdminModeDao {
+	/**
+	 * 관리자 페이지에서 회원정보 조회
+	 * @param email
+	 * @return MemberVO
+	 */
+	public MemberVO searchUserEmail (String email);
+	
+	/**
+	 * 관리자 페이지에서 회원정지일 해제
+	 * @param email
+	 * @return 성공1, 실패0
+	 */
+	public int updateStopdate (String email);
+}

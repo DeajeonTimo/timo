@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<style>
+#content{
+	display : flex;
+	flex-direction : row;
+	
+}
+
+ .res{
+	flex : 25%;
+	border : 2px dotted gold;
+	box-sizing : border-box;
+}
+.box div .res{
+	border : 2px dotted blue;
+}
+
+</style>
+<script src="../js/jquery-3.7.1.min.js"></script>
+<Script>
+let xhr = new XMLHttpRequest();
+
+obarrproc=()=>{
+	//요청
+	xhr.open("GET","obarr.jsp",true);
+	xhr.send();
+	
+	//응답
+	xhr.onreadystatechange = function(){
+		if(this.readyState ==4 && this.status ==200){
+			res = this.responseText;
+			 //["홍길동","강감찬","이순신","임꺽정","김유신"]
+			    //json형식, 형태의 배열값을 script객체로 변환 - JSON.parse()
+			 res = JSON.parse(res);
+			 code = "";
+			
+			 res.forEach((str,index)=>{
+				 code += `${index} 번째정보 <br>`;
+				 code += `이름 : ${str.name} <br>`;
+				 code += `주소 : ${str.addr} <br>`;
+				 code += `전화번호 : ${str.tel} <br><br>`;
+			 })
+			 
+			 $('#result4').html(code);
+		}
+	}
+	
+}
+
+
+
+
+
+objproc = () =>{
+	//요청
+	xhr.open("GET","obj.jsp",true);
+	xhr.send();
+	
+	//응답
+	xhr.onreadystatechange = function(){
+		if(this.readyState ==4 && this.status ==200){
+			res = this.responseText;
+			 //["홍길동","강감찬","이순신","임꺽정","김유신"]
+			    //json형식, 형태의 배열값을 script객체로 변환 - JSON.parse()
+			 res = JSON.parse(res);
+			 
+			 code = `이름 : ${res.name} <br>`;
+			 code += `주소 : ${res.addr} <br>`;
+			 code += `전화번호 : ${res.tel} <br>`;
+
+			 
+			 $('#result3').html(code);
+		}
+	}
+}
+
+
+
+
+
+arrproc = () =>{
+	//요청
+	xhr.open("GET","arr.jsp",true);
+	xhr.send();
+	
+	//응답
+	xhr.onreadystatechange = function(){
+		if(this.readyState ==4 && this.status ==200){
+			res = this.responseText;
+			 //["홍길동","강감찬","이순신","임꺽정","김유신"]
+			    //json형식, 형태의 배열값을 script객체로 변환 - JSON.parse()
+			res = JSON.parse(res);
+			 code = "<ol>";
+		   /*for(i=0; i<res.length; i++){
+				 res[i]
+			 } */
+			/*  $.each(res,function(i){
+				 res[i]
+			 }) */
+			 
+			 res.forEach((str)=>{
+				code+= "<li>"+ str+"</li>";
+			 })
+			 
+			 code+= "</ol>";
+			 
+			 $('#result2').html(code);
+		}
+	}
+	
+}
+
+
+
+
+textproc = () =>{
+	//요청
+	xhr.open("GET","text.jsp",true);
+	xhr.send();
+	
+	//응답
+	xhr.onreadystatechange = function(){
+		if(this.readyState ==4 && this.status ==200){
+			res = this.responseText;
+			 //홍길동/개나리/진달래/무궁화/수선화/라일락
+			res=res.split("/");
+			 
+			 code = "<ul>";
+		   /*for(i=0; i<res.length; i++){
+				 res[i]
+			 } */
+			/*  $.each(res,function(i){
+				 res[i]
+			 }) */
+			 
+			 res.forEach((str,index)=>{
+				code+= "<li>"+ str+"</li>";
+			 })
+			 
+			 code+= "</ul>";
+			 
+			 $('#result1').html(code);
+		}
+	}
+}
+</Script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="text" onclick="textproc()">
+<input type ="button" value="arr" onclick="arrproc()">
+<input type ="button" value="jsonobj" onclick="objproc()">
+<input type ="button" value="jobarr" onclick="obarrproc()">
+<br><br>
+<div id="content">
+<div id="result1" class="res"></div>
+<div id="result2" class="res"></div>
+<div id="result3" class="res"></div>
+<div id="result4" class="res"></div>
+
+</div>
+</div>
+</body>
+</html>

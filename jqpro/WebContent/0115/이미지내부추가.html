@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<style>
+img{
+	width : 100px;
+	height : 100px; 
+}
+p{
+	border : 2px solid blue;
+}
+</style>
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	$('#app').on('click',()=>{
+		//이미지 만들기
+		
+		vimg = $("<img src='../images/그또한우리사랑.jpg' alt='그또한우리사랑'>");
+		
+		//p1에 추가
+//		$('#p1').append(vimg);
+		$(vimg).appendTo('#p1');
+	})
+	
+		$('#prep').on('click',()=>{
+		//이미지 만들기
+		
+		vimg = $("<img src='../images/그또한우리사랑.jpg' alt='그또한우리사랑'>");
+		
+		//p2에 추가
+//		$('#p2').prepend(vimg);
+		$(vimg).prependTo('#p2');
+	})
+	
+	$('#aft').on('click',function(){
+		vimg = $("<img src='../images/그또한우리사랑.jpg' alt='그또한우리사랑'>");
+//		$('#p4').after(vimg);
+		$(vimg).insertAfter($('#p4'));
+	})
+	
+	$('#bef').on('click',()=>{
+		vimg = $("<img src='../images/그또한우리사랑.jpg' alt='그또한우리사랑'>");
+//		$('#p3').before(vimg);
+		$(vimg).insertBefore($('#p3'));
+	})
+})
+
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="append" id="app">
+<input type ="button" value="prepend" id="prep">
+<br><br>
+<p id="p1">그 또한 우리 사랑</p>
+<p id="p2">그 또한 우리 사랑</p>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="after" id="aft">
+<input type ="button" value="before" id="bef">
+<br><br>
+<p id="p3">그 또한 우리 사랑</p>
+<p id="p4">그 또한 우리 사랑</p>
+<div id="result2"></div>
+</div>
+</body>
+</html>

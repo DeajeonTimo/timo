@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reply">
+
+<!-- 글쓰기  -->
+<insert id="insertReply" parameterType="ReplyVO">
+	insert into replytab values(REPLYTAB_RENUM_SEQ.nextval,#{bonum},#{name},#{cont},sysdate)
+</insert>
+<!-- 글수정  -->
+<update id="updateReply" parameterType="ReplyVO">
+	update replytab set 
+	cont = #{cont}, 
+	redate = sysdate
+	where renum = #{renum}
+</update>
+<!-- 글삭제  -->
+<delete id="deleteReply" parameterType="int">
+	delete from replytab where renum = #{data}
+</delete>
+<!-- 댓글리스트 -->
+<select id="listReply" parameterType="int" resultType="ReplyVO">
+select * from replytab where bonum = #{data}
+
+</select>
+</mapper>

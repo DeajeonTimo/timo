@@ -1,0 +1,115 @@
+<%@page import="sangchu.main.vo.MemberVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원관리</title>
+</head>
+<%  MemberVO vo= (MemberVO)session.getAttribute("memVO");
+	if(vo==null){
+		out.println("<script>location.href='"+request.getContextPath()+"/loginsessionError.do'</script>");
+	}
+%>
+<script src="../js/jquery/jquery-3.7.0.min.js"></script>
+
+<style>
+    html,body {
+        font-family: 'Noto Sans KR', sans-serif;
+        margin : 0px;
+        padding : 0px;
+        height: 100%;
+    }
+
+    html{
+        min-width: 1200px;
+    }
+
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+	.searchWrap{
+	width: 100%;
+	height: 100%;
+        display: flex;
+        flex-direction : column;
+         justify-content: center;
+        align-items: center;
+	}
+	
+    .searchSection {
+        display: flex;
+        flex-direction: row;
+        background-color: #03cd5d;
+        border: 4px solid #03cd5d;
+        width: 600px;
+        height: 40px;
+    }
+
+    .searchSection:focus-within {
+      box-shadow: 0 0 3px #01f36e;
+    }
+
+    .searchSection input {
+        flex: 20;
+        border: none;
+        outline: none;
+        text-align: center;
+        font-size: 20px;
+        background-color: #fff;
+    }
+
+    .searchSection img{
+        width: 30px;
+        height: 30px;
+        opacity: 60%;
+        margin: 4px 5px 0px 10px;
+        cursor: pointer;
+    }
+
+    /* .searchSection :hover {
+        transition: 0.1s ease-out;
+        border: 3px solid #03cd5d;
+        ;
+    } */
+</style>
+
+<body>
+    <div class="searchWrap" id="searchWrap">
+        <div class="searchSection">
+            <input type="text" id="userEmailInput" placeholder="회원이메일 입력">
+            <img src="../../images/search.png" id="goToSearch">
+        </div>
+    </div>
+</body>
+<script>
+	
+	$(function(){
+		$('#goToSearch').on('click', function(){
+			var userEmailInput = $('#userEmailInput').val();
+			
+			$.ajax({
+				url : "<%=request.getContextPath()%>/searchUsers.do",
+				data : {"userEmailInput": userEmailInput},
+				dataType : 'json',
+				
+				success : function(res){
+					if(res=="noexist"){
+						alert('일치하는 회원 정보가 존재하지 않습니다.');
+					}else{
+						 $('#searchWrap').load('<%=request.getContextPath()%>/printUserInfo.do?userEmailInput=' + userEmailInput);
+					}
+				},
+				error : function(xhr){
+					alert('오류 : '+xhr.status);
+				},
+				type : 'post'
+			})
+		})
+	})
+</script>
+</html>

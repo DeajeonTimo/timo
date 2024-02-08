@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+
+proc1 =()=>{
+	//document.getElementById('result1').style.background = "yellow";
+	
+	vres1 = document.getElementById('result1');
+	vres1.style.background = "yellow";
+}
+
+/*  window.onload = function(){
+	
+	//id가 jqbtn인 요소를 검색 - onclick 이벤트 부여
+	$('#jqbtn').on('click',() =>{
+		vres2 = $('#result2');
+		vres2.css('background','yellow');
+	})
+	
+} */
+
+
+ $(document).ready( ()=> {
+	
+	$('#jqbtn').on('click',() =>{
+		vres2 = $('#result2');
+		vres2.css('background','yellow');
+	})
+}) 
+
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4>script 방식 - button에 Onclick = "proc1()"</h4>
+<input type ="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4>jqurey방식 - script에서 id를 이용해 button을 검색접근하여 이벤트를 부여한다.</h4>
+<input type ="button" value="확인" id="jqbtn">
+<br><br>
+<div id="result2"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+script에서 html요소로 접근 방법
+
+id를 이용한 방법
+var a = document.getElementById('id이름');
+
+var a =document.querySelector('#id이름');
+
+class를 이용한 방법
+
+var b1 =document.getElementsByClassName('class이름');
+var b1 = document.querySelectorAll('.class이름');
+b1[0].innerHTML
+b1[1].innerHTML
+var b2 = document.querySelector('.class이름');
+
+name을 이용한 방법
+
+c=document.getElementsByName('name이름');
+c[0].
+c[1].
+
+tag이름을 이용한 접근방법
+d1 = document.getElementsByTagName('tag이름');
+d1 = document.querySelectorAll('tag이름');
+
+d2 = document.querySelector('tag이름');
+
+요소의 값 가져오기,
+a.value - input요소, select/option, textarea
+b1[0].inerHTML - div,p,span,td,label, a,h1,h2,b,strong,em,mark
+d2.inerText - div,p,span,td,label, a,h1,h2,b,strong,em,mark
+
+요소의 결과값을 출력하기
+a.value = "hi"; - input요소, select/option, textarea
+b1.inerHTML = "<a>href=""<br>네이버</a>";
+b1[1].innerText = "<a>href=""<br>네이버</a>"; 

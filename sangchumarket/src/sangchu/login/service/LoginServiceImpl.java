@@ -1,0 +1,127 @@
+package sangchu.login.service;
+
+import java.util.List;
+
+import sangchu.category.vo.CatMiddleVO;
+import sangchu.login.dao.LoginDaoImpl;
+import sangchu.main.vo.MemberVO;
+import sangchu.qnaBoard.vo.QNABoardVO;
+
+public class LoginServiceImpl implements ILoginService{
+
+	private static LoginServiceImpl service;
+	private LoginDaoImpl dao;
+	
+	private LoginServiceImpl() {
+		dao = LoginDaoImpl.getInstance();
+	}
+	
+	public static LoginServiceImpl getInstance() {
+		if(service==null)service=new LoginServiceImpl();
+		return service;
+	}
+	
+	@Override
+	public String checkEmail(String email) {
+		return dao.checkEmail(email);
+	}
+
+	@Override
+	public int insertFristSignup(MemberVO memVo) {
+		return dao.insertFristSignup(memVo);
+	}
+
+	@Override
+	public String checkACode(String email) {
+		return dao.checkACode(email);
+	}
+
+	@Override
+	public String checkNickname(String nickname) {
+		return dao.checkNickname(nickname);
+	}
+
+	@Override
+	public MemberVO getAllMemberInfo(String email) {
+		return dao.getAllMemberInfo(email);
+	}
+
+	@Override
+	public int updateLoginTry(String email) {
+		return dao.updateLoginTry(email);
+	}
+
+	@Override
+	public int updateTryToZero(String email) {
+		return dao.updateTryToZero(email);
+	}
+
+	@Override
+	public List<CatMiddleVO> getMiCatfromLaCat(String LaCatName) {
+		return dao.getMiCatfromLaCat(LaCatName);
+	}
+
+	@Override
+	public int insertSecondSighup(MemberVO memVO) {
+		return dao.insertSecondSighup(memVO);
+	}
+
+	@Override
+	public int updateA_code(String email) {
+		return dao.updateA_code(email);
+	}
+
+	@Override
+	public List<String> findEmail(MemberVO memVO) {
+		return dao.findEmail(memVO);
+	}
+
+	@Override
+	public String findPass(MemberVO memVO) {
+		return dao.findPass(memVO);
+	}
+
+	@Override
+	public int updateTempPassword(MemberVO memVO) {
+		return dao.updateTempPassword(memVO);
+	}
+
+	@Override
+	public MemberVO getAllUsersVO(String email) {
+		return dao.getAllUsersVO(email);
+	}
+
+	@Override
+	public int countAllusers() {
+		// TODO Auto-generated method stub
+		return dao.countAllusers();
+	}
+
+	@Override
+	public int countToday() {
+		// TODO Auto-generated method stub
+		return dao.countToday();
+	}
+
+	@Override
+	public int updatelogindate(String email) {
+		return dao.updatelogindate(email);
+	}
+
+	@Override
+	public int countSignupToday() {
+		return dao.countSignupToday();
+	}
+
+	@Override
+	public int countGender(String u_gender) {
+		return dao.countGender(u_gender);
+	}
+
+	@Override
+	public List<QNABoardVO> qnAList() {
+		return dao.qnAList();
+	}
+
+	
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	$('#rem').on('click',()=>{
+		$('#result1').remove();
+	})
+	
+	$('#emp').on('click',()=>{
+		$('#result2').empty();
+	})
+})
+</script>
+<style>
+#result1, #result2{
+	background : gold;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="remove" id="rem">
+<input type ="button" value="empty" id="emp">
+<br><br>
+<div id="result1">
+무궁화 꽃이 피었습니다.<br>
+무궁화 꽃이 피었습니다.<br>
+무궁화 꽃이 피었습니다.<br>
+무궁화 꽃이 피었습니다.<br>
+</div>
+
+<div id="result2">
+무궁화 꽃이 피었습니다.<br>
+무궁화 꽃이 피었습니다.<br>
+무궁화 꽃이 피었습니다.<br>
+무궁화 꽃이 피었습니다.<br>
+
+</div>
+</div>
+</body>
+</html>

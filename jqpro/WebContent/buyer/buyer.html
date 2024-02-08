@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="../js/jquery-3.7.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(()=>{
+	
+	$.ajax({
+		url : '/jqpro/buyer/buyerNameList.jsp',
+		type : 'get',
+		success : (res) =>{
+				
+			 code = "";
+			$.each(res, function(i,v){
+				code += `<div>${v.buyer_name}</div>`
+			})
+			
+			$('#td1').html(code);
+			//$('#lprod').append(code); */
+				
+		},
+		error : function(xhr){
+			alert("상태 : " + xhr.status)
+		},
+		dataType : 'json'	
+	})
+	$(document).on('click','div',function(){
+		$('#td1 div').css('background-color', 'black')
+		$(this).css('background-color', 'green');
+		name = $(this).text().trim();
+		$.ajax({
+			url : '/jqpro/buyer/buyerList.jsp',
+			type : 'get',
+			data :'name='+name,
+			success : (res) =>{
+			 	 code = "";
+				code += `<div><pre>buyer_id           ${res.buyer_id}</pre></div>`
+				code += `<div><pre>buyer_name         ${res.buyer_name}</pre></div>`
+				code += `<div><pre>buyer_lgu          ${res.buyer_lgu}</pre></div>`
+				code += `<div><pre>buyer_bank         ${res.buyer_bank}</pre></div>`
+				code += `<div><pre>buyer_bankno       ${res.buyer_bankno}</pre></div>`
+				code += `<div><pre>buyer_bankname     ${res.buyer_bankname}</pre></div>`
+				code += `<div><pre>buyer_zip          ${res.buyer_zip}</pre></div>`
+				code += `<div><pre>buyer_add1         ${res.buyer_add1}</pre></div>`
+				code += `<div><pre>buyer_add2         ${res.buyer_add2}</pre></div>`
+				$('#td2').html(code);
+				//$('#lprod').append(code); */ 
+					
+			},
+			error : function(xhr){
+				alert("상태 : " + xhr.status)
+			},
+			dataType : 'json'	
+		})
+	
+	
+	})
+	
+})
+</script>
+</head>
+<body>
+<div class="box">
+<br><br>
+<div id="result1">
+<table class="table table-dark table-striped">
+	<tr>
+		<td>거래처 이름</td>
+		<td>거래처 상세정보</td>
+	</tr>
+	<tr>
+		<td id ="td1"></td>
+		<td id ="td2"></td>
+	</tr>
+</table>
+</div>
+</div>
+</body>
+</html>

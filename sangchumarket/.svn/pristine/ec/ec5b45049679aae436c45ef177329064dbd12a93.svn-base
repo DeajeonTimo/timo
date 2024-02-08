@@ -1,0 +1,55 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	.starpoint_box .star_radio{
+		width : 0px;
+		height : 0px;
+		opacity: 0;
+		position : absolute;
+	}
+	.for-the-king {
+		filter : grayscale(100%);
+	}
+</style>
+<link href="/css/style.css" rel="stylesheet">
+<script src="<%=request.getContextPath()%>/js/jquery/jquery-3.7.0.min.js"></script>
+<script>
+$(function(){
+	 $("input[type='radio']").change(function() {
+		 $('.sangc').addClass('for-the-king');
+	        if ($(this).is(":checked")) {
+	            var vidx = $(this).attr('value');
+	            var vid = $(this).attr("id");
+	            var gogo = vid.slice(0, -1);
+	            for(i = 1;i <= vidx;i++){
+	            	$("label[for='" + gogo + i + "']>img").removeClass("for-the-king");
+	            }
+	        }
+	    });
+});
+</script>
+<body>
+
+<div class="starpoint_wrap">
+  <div class="starpoint_box">
+    <label for="starpoint_1" class="label_star" title="1"><img class="sangc for-the-king" src="<%=request.getContextPath()%>/images/o_reviewpoint.png"></label>
+    <label for="starpoint_2" class="label_star" title="2"><img class="sangc for-the-king" src="<%=request.getContextPath()%>/images/o_reviewpoint.png"></label>
+    <label for="starpoint_3" class="label_star" title="3"><img class="sangc for-the-king" src="<%=request.getContextPath()%>/images/o_reviewpoint.png"></label>
+    <label for="starpoint_4" class="label_star" title="4"><img class="sangc for-the-king" src="<%=request.getContextPath()%>/images/o_reviewpoint.png"></label>
+    <label for="starpoint_5" class="label_star" title="5"><img class="sangc for-the-king" src="<%=request.getContextPath()%>/images/o_reviewpoint.png"></label>
+
+    <input type="radio" value="1" name="starpoint" id="starpoint_1" class="star_radio">
+    <input type="radio" value="2" name="starpoint" id="starpoint_2" class="star_radio">
+    <input type="radio" value="3" name="starpoint" id="starpoint_3" class="star_radio">
+    <input type="radio" value="4" name="starpoint" id="starpoint_4" class="star_radio">
+    <input type="radio" value="5" name="starpoint" id="starpoint_5" class="star_radio">
+    <span class="starpoint_bg"></span>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 mybatis의 환경 설정용 파일입니다. -->
+<!DOCTYPE configuration
+   PUBLIC "-//mybatis.org/DTD config 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+   <!-- DB연결에 필요한 정보가 저장된 properties파일 정보 구성하기 -->
+   <properties resource="mybatis/config/dbinfo.properties"/>
+   
+   <!-- 기본 셋팅 정보 설정 -->
+   <settings>
+      <!-- NULL로 전달된 데이터를 빈칸으로 처리하지 말고 null로 처리하라.. -->
+      <setting name="jdbcTypeForNull" value="NULL"/>
+   </settings>
+   
+   <!-- 쿼리문에서 사용되는 VO객체의 전체 이름을 대신해서 사용할 alias를 저장하는부분 -->
+   <!-- 전체 이름을 사용하면 클래스이름이 길어지는데 그것을 짧게 사용하기 위한 별칭 설정 -->
+   
+
+   <typeAliases>
+   <!--  <typeAlias type="클래스의 전체 경로" alias="별칭"/> -->
+		<typeAlias type="sangchu.chat.vo.ChatVO" alias="chatVO"/>
+		<typeAlias type="sangchu.mypage.vo.JjimVO" alias="jjimVO"/>
+      	<typeAlias type="sangchu.main.vo.MemberVO" alias="memVO"/>
+      	<typeAlias type="sangchu.chat.vo.ChatDetailVO" alias="chatDetailVO"/>
+		<typeAlias alias="tboardVO" type="sangchu.tboard.vo.TBoardVO"/>
+		<typeAlias alias="catLargeVO" type="sangchu.category.vo.CatLargeVO"/>
+		<typeAlias type="sangchu.trade.vo.TradeVO" alias="tradeVO"/>
+		<typeAlias alias="catMiddleVO" type="sangchu.category.vo.CatMiddleVO"/>
+      	<typeAlias type="sangchu.mypage.vo.RegTradeVO" alias="regTradeVO"/>
+      	<typeAlias type="sangchu.main.vo.MainProdVO" alias="mainProdVO"/>
+      	<typeAlias type="sangchu.mypage.vo.TradeLogVO" alias="tradeLogVO"/>
+      	<typeAlias type="sangchu.uView.vo.UViewVO" alias="uviewVO"/>
+      	<typeAlias type="sangchu.mypage.vo.UpdateMemberVO" alias="upMemVO"/>
+      	<typeAlias type="sangchu.qnaBoard.vo.QNABoardVO" alias="qnaBoardVO"/>
+      	<typeAlias type="sangchu.images.vo.ImagesVO" alias="imagesVO"/>
+      	<typeAlias type="sangchu.login.vo.InterestVO" alias="interestVO"/>
+      	<typeAlias type="sangchu.mypage.vo.UserKeywordVO" alias="ukeyVO"/>
+      	<typeAlias type="sangchu.mypage.vo.CatManageVO" alias="catManVO"/>
+      	<typeAlias type="sangchu.mypage.vo.BlackListVO" alias="blackVO"/>
+      	<typeAlias type="sangchu.adminMode.vo.EnquiryVO" alias="enquiryVO"/>
+      	<typeAlias type="sangchu.chat.vo.OfferVO" alias="offerVO"/>
+      	<typeAlias type="sangchu.chat.vo.TradeLogVO" alias="tLogVO"/>
+		
+   </typeAliases>
+
+   
+
+   
+   <!-- DB 연결 설정 부분 -->
+   <environments default="oracleDevelopment">
+      <environment id="oracleDevelopment">
+         <transactionManager type="JDBC"/>
+         <dataSource type="POOLED">
+            <!-- 연결 정보 설정하기 -->
+            <property name="driver" value="${driver}"/>
+            <property name="url" value="${url}"/>
+            <property name="username" value="${user}"/>
+            <property name="password" value="${pass}"/>
+         </dataSource>
+      </environment>
+   </environments>
+   
+   <!-- DB에 사용되는 SQL문들이 저장된 xml 파일 등록하는 부분(mapper파일 등록부분) -->
+   <!-- 
+      형식)
+      <mappers>
+         <mapper resource="경로명/파일명.xml"/>
+      </mappers>
+         
+    <mappers>
+       <mapper resource=""/>
+
+    </mappers>
+    -->
+    <!--
+    <mappers>
+       <mapper resource="mybatis/mappers/chat-mapper.xml"/>
+    </mappers>
+    -->
+    <mappers>
+       <mapper resource="mybatis/mappers/member-mapper.xml"/>
+       <mapper resource="mybatis/mappers/chat-mapper.xml"/>
+       <mapper resource="mybatis/mappers/mypage-mapper.xml"/>
+       <mapper resource="mybatis/mappers/tboard-mapper.xml"/>
+       <mapper resource="mybatis/mappers/category-mapper.xml"/>
+       <mapper resource="mybatis/mappers/main-mapper.xml"/>
+       <mapper resource="mybatis/mappers/qnaBoard-mapper.xml"/>
+    </mappers>
+    
+    
+</configuration>
+
+
+
+
+<!--
+	수정이력
+	2023.08.07 13:34 김석호 : chatVO,chatDetailVO 및 chat-mapper 등록
+	2023.08.09 22:33 김석호 : chat-mapper 재 등록
+	2023.08.10 13:40 김석호 : jjimVO, mypage-mapper 등록
+	2023.08.10 17:43 김석호 : 계속 충돌난거 또 합침.. 
+	2023.08.11 10:19 김석호 : RegTradeVO 추가 
+	업데이트 내역 확인하고 최신버전 유지해주세요..
+	2023.08.12 11:29 김석호 : tradeLogVO 추가
+	2023.08.14 18:01 김석호 : UpdateMemberVO 추가
+	2023.08.14 22:50 박민주 : imagesVO,interestVO 추가
+	2023.08.15 11:37 김석호 : ukeyVO 추가
+	2023.08.16 09:01 김석호 : catManVO 추가
+	2023.08.16 15:51 김석호 : BlackListVO 추가
+	2023.08.18 11:41 김석호 : TradeVO,OfferVO 추가
+	
+ -->

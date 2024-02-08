@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	$('#btn1').on('click',()=>{
+		$.ajax({
+			url : '/jqpro/0119/LprodList.jsp',
+			type : 'get',
+			success : (res) =>{
+				code = "<table border='1'>";
+				code+="<tr><td>LPROD_ID</td>";
+				code+="<td>LPROD_GU</td>";
+				code+="<td>LPROD_NM</td></tr>";
+				
+				$.each(res, function(i,v){
+					code += `<tr><td>${res[i].lprod_id}</td>`;
+					code += `<td>${res[i].lprod_gu}</td>`;
+					code += `<td>${res[i].lprod_nm}</td></tr>`;
+				})
+				code += "</table>"
+				$('#result1').html(code);
+			},
+			error : function(xhr){
+				alert("상태 :" + xhr.status )
+			},
+			dataType : 'json'
+		})
+	}) 
+})
+
+</script> 
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn1">
+<br><br>
+<div id="result1"></div>
+</div>
+</body>
+</html>

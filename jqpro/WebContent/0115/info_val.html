@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<style>
+textarea{
+	vertical-align: top;
+}
+</style>
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	$('#btnview').on('click',()=>{
+		//각 입력한 값을 가져온다. - val()
+		
+		user = $('#user').val();
+		
+		gend = $('.gend:checked').val();
+		
+		area = $('#intro').val();
+		
+		area = area.replaceAll(/\n/g,"<br>")
+		
+		work = $('#work option:selected').val();
+		
+		//출력 내용
+		
+		str = `이름 : ${user} <br>`;
+		str += `성별 : ${gend} <br>`;
+		str += `소개 : ${area} <br>`;
+		str += `직업 : ${work} <br>`;
+		
+		//출력
+		$('#res1').html(str);
+	})
+	
+	$('#btnchange').on('click',()=>{
+		//btnchange 버튼은 submit을 수행하는 버튼
+		event.preventDefault();
+		//이름 입력
+		userName = prompt("이름입력");
+		
+		$('#user').val(userName);
+	})
+	
+	$('a').on('click',function(){
+		age=10;
+		if(age<15){
+			event.preventDefault();
+			alert("대상이 아닙니다.");
+		}
+	})
+})
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<a href="http://www.naver.com">네이버</a>
+<br><br>
+<div id="result1">
+<form>
+  <label for="user">이름</label>
+<input type="text" id="user" value="korea"><br>
+<label >성별</label> 
+  <input type="radio" class="gend" name="gend" value="남자" checked >남자
+  <input type="radio" class="gend" name="gend" value="여자"  >여자<br>
+  <label for="intro">소개</label> 
+<textarea id="intro" cols="40" rows="4"></textarea> <br>
+ <label for="work">직업</label>
+ <select id="work">
+   <option value="programmer">프로그래머</option>
+   <option value="progammer">프로게이머</option>
+   <option value="whitehand">백수</option>
+ </select><br>
+<button type= "button" id="btnview">조사하기 </button>
+<button  id="btnchange">이름변경 </button>
+</form>
+</div>
+<div id="res1"></div>
+</div>
+</body>
+</html>

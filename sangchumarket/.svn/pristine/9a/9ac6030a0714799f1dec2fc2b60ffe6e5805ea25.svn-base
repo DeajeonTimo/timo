@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tboard">
+
+	<select id="selectTBoard" parameterType="String"
+		resultType="tboardVO">
+		select * from (select * from trade
+		where c_middlecat=#{mid} order by t_date desc) a,t_board b where a.t_no=b.t_no
+	</select>
+
+
+	<select id="selectTBoardOne" parameterType="String"
+		resultType="tboardVO">
+		select * from t_board where t_no=#{tid}
+	</select>
+
+	<select id="selectTradeOne" parameterType="String"
+		resultType="tradeVO">
+		select * from trade where t_no=#{tid}
+	</select>
+
+	<select id="selectTradeOneForTno" parameterType="String"
+		resultType="String">
+		select trade_seq.currval from dual
+	</select>
+
+	<select id="tImage" parameterType="String" resultType="String">
+		select
+		img_src
+		from
+		IMAGES
+		where
+		img_code like #{t_no}
+		order by
+		img_src
+	</select>
+
+	<insert id="addUView" parameterType="uviewVO">
+		insert into u_view
+		values(sysdate,#{email},#{t_no})
+	</insert>
+
+	<insert id="tImageInsert" parameterType="tboardVO">
+		INSERT INTO images
+		VALUES (
+		#{t_no},
+		#{fileName}
+		)
+
+	</insert>
+
+	<insert id="addTrade" parameterType="tradeVO">
+		insert into trade
+		values(trade_seq.nextval,#{c_middlecat},#{email},${t_type},sysdate,sysdate,0)
+	</insert>
+
+	<insert id="addTBorad" parameterType="tboardVO">
+		insert into t_board
+		values(trade_seq.currval,
+		#{tb_title},#{tb_content},0,#{tb_loc},#{tb_loc},#{tb_price},#{tb_offer})
+	</insert>
+
+	<select id="selectCatMiddleOne" resultType="catMiddleVO"
+		parameterType="String">
+		SELECT b.c_name,
+		a.C_LARGECAT,
+		b.C_MIDDLECAT
+		FROM CAT_LARGE
+		a RIGHT JOIN CAT_MIDDLE b
+		ON a.C_LARGECAT = b.C_LARGECAT
+		where
+		b.c_largecat=#{c_largecat}
+		ORDER BY
+		C_MIDDLECAT
+	</select>
+</mapper>

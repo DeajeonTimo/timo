@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="qna">
+
+	<!-- 문의 게시글 등록-->
+	<insert id="insertQNABoard" parameterType="qnaBoardVO">
+		INSERT INTO COMMUNITY
+			(CM_NO, CM_CAT, CM_TITLE, CM_CONTENT, CM_DATE, CM_HIT, EMAIL)
+		VALUES(
+			 (#{cm_no}||LPAD(SEQ_FOR_QNABOARD.nextval, 10, '0'))
+			, #{cm_cat}
+			, #{cm_title}
+			,#{cm_content}
+			, sysdate
+			, #{cm_hit} 
+			, #{email}
+			)
+	</insert>
+	
+	
+	<!--문의게시판 페이징을 위한 쿼리 -->
+	<select id="qnaBoardList" resultMap="qnaBoardMap" parameterType="qnaBoardVO">
+		<![CDATA[
+		SELECT A.* 
+		FROM (
+		     SELECT ROWNUM AS RNUM
+		     	, B.*  
+		     FROM (
+		     	SELECT 
+					a.CM_NO
+					,a.CM_CAT
+					,a.CM_TITLE
+					,a.CM_CONTENT
+					,TO_CHAR(a.CM_DATE,'yy.mm.dd') as CM_DATE
+					,a.CM_HIT
+					,a.EMAIL
+					,DECODE(b.CM_CONTENT,NULL,' ',b.CM_CONTENT) AS cr_content
+					,DECODE(b.CR_NO, NULL,'N','Y') AS CR_NO
+				FROM COMMUNITY a
+				LEFT OUTER JOIN REPLY b
+				ON a.CM_NO = b.CM_NO
+				WHERE a.EMAIL=  #{email}
+					AND a.CM_CAT = '4'
+				ORDER BY a.CM_NO DESC
+		     ) B
+		     WHERE ROWNUM <= #{end} ) A 
+		WHERE A.RNUM >= #{start}
+		]]>	
+	</select>
+	
+	<!--문의게시판 글수-->
+	<select id="qnaBoardListCounting" resultType="int" parameterType="qnaBoardVO">
+	
+		SELECT COUNT(*)
+		FROM COMMUNITY a
+		LEFT OUTER JOIN REPLY b
+		ON a.CM_NO = b.CM_NO
+		WHERE a.EMAIL= #{email}
+			AND CM_CAT = '4'
+	
+	</select>
+	
+	
+	<resultMap id="qnaBoardMap" type="qnaBoardVO">
+    	<result property="cm_no" column="CM_NO"  />
+    	<result property="cm_cat" column="CM_CAT" />
+    	<result property="cm_title" column="CM_TITLE" />
+    	<result property="cm_content" column="CM_CONTENT" jdbcType="CLOB" javaType="java.lang.String" />
+    	<result property="cm_date" column="CM_DATE" />
+    	<result property="cm_hit" column="CM_HIT" />
+    	<result property="email" column="EMAIL" />
+    	<result property="cr_no" column="CR_NO"/>
+    	<result property="rnum" column="RNUM"/>
+    	<result property="cr_content" column="cr_content"/>
+	</resultMap>
+	
+	<!--문의글과 동시에 답글 삭제-->
+	
+	<delete id="deleteQNABoard" parameterType="qnaBoardVO">
+		DELETE FROM COMMUNITY
+		WHERE CM_NO= #{cm_no}
+	</delete>
+	
+	<delete id="deleteQNAReply" parameterType="qnaBoardVO">
+		DELETE FROM REPLY
+		WHERE cm_no= #{cm_no} 
+	</delete>
+	
+	
+	<!--문의글 수정-->
+	<update id="updateQNABoard" parameterType="qnaBoardVO" >
+		UPDATE COMMUNITY
+		SET CM_TITLE= #{cm_title}, CM_CONTENT=#{cm_content}, CM_DATE=sysdate
+		WHERE CM_NO= #{cm_no}
+	</update>
+	
+	<!-- 문의글 정보 가져오기-->
+	<select id="selectQnaInfo" resultMap="qnaBoardMap" parameterType="qnaBoardVO">
+		SELECT	
+			cm_no
+			,cm_title
+			,cm_content
+			,email
+		FROM COMMUNITY
+		WHERE cm_no =#{cm_no}
+	</select>	
+	
+	
+	
+	<!--관리자모드일때 문의게시글 보기-->
+	<select id="qnaBoardManageList" resultMap="qnaBoardMap" parameterType="qnaBoardVO">
+		<![CDATA[
+		SELECT A.* 
+		FROM (
+		     SELECT ROWNUM AS RNUM
+		     	, B.*  
+		     FROM (
+		     	SELECT 
+					a.CM_NO
+					,a.CM_CAT
+					,a.CM_TITLE
+					,a.CM_CONTENT
+					,TO_CHAR(a.CM_DATE,'yy.mm.dd') as CM_DATE
+					,a.CM_HIT
+					,a.EMAIL
+					,DECODE(b.CM_CONTENT,NULL,' ',b.CM_CONTENT) AS cr_content
+					,DECODE(b.CR_NO, NULL,'N','Y') AS CR_NO
+				FROM COMMUNITY a
+				LEFT OUTER JOIN REPLY b
+				ON a.CM_NO = b.CM_NO
+				WHERE a.CM_CAT = '4'
+				ORDER BY a.CM_NO DESC
+		     ) B
+		     WHERE ROWNUM <= #{end} ) A 
+		WHERE A.RNUM >= #{start}
+		]]>	
+	</select>
+	
+	
+	<!--관리자의 답변 저장하는 쿼리-->
+	<insert id="insertReply" parameterType="qnaBoardVO">
+		INSERT INTO REPLY
+			(CR_NO, CM_NO, EMAIL, CM_CONTENT, CM_DATE)
+		VALUES(SEQ_FOR_REPLY.nextval, #{cm_no}, #{email}, #{cm_content},sysdate)
+	</insert>
+	
+	<!--관리자문의관리게시판 글수-->
+	<select id="AdminqnaBoardListCounting" resultType="int" parameterType="qnaBoardVO">
+	
+		SELECT COUNT(*)
+		FROM COMMUNITY a
+		LEFT OUTER JOIN REPLY b
+		ON a.CM_NO = b.CM_NO
+		WHERE CM_CAT = '4'
+	
+	</select>
+		
+		
+	<!--자주묻는질문-->	
+	<select id="selectHelpPage" resultMap="qnaBoardMap" parameterType="qnaBoardVO">
+		
+		SELECT 
+			cm_no
+			,cm_cat
+			,cm_title
+			,cm_content
+		FROM COMMUNITY
+		WHERE CM_CAT = '5'
+		
+	</select>
+	
+	
+
+</mapper>	

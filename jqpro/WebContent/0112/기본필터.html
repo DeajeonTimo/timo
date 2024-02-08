@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<style>
+table{
+	border:2px solid blue;
+}
+td{
+	width : 300px;
+	height : 50px;
+	tsxt-align : center;
+}
+</style>
+<script src="../js/jquery-3.7.1.min.js">
+</script>
+<script>
+$(()=>{
+	$('#btn1').on('click',()=>{
+		$('li:first, li:last').css('background','yellow');
+		$('li:eq(5)').css('background','red');
+	})
+	
+	
+	$('#btn2').on('click',()=>{
+		//짝수번째 tr
+		$('tr:even').css('background','lightgray');
+		//홀수번째  tr
+		$('tr:odd').css('background','lightblue');
+		
+		//첫째줄 선택 - 제목 표시
+/* 		$('tr:first').css('background','black')
+					 .css('color','white')
+					 .css('font-size','2.0rem')
+					 .css('font-weight','bold'); */
+		
+		$('tr:first').css({'background':'black',
+							'color'    :'white',		
+							'font-size':'2.0rem',
+							'font-weight':'bold'});
+					 
+	})
+	
+})
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn1">
+<br><br>
+<div id="result1">
+  <ul>
+ 	<li>one</li>
+	<li>two</li>
+	<li>thre</li>
+	<li>four</li>
+	<li>five</li>
+	<li>six</li>
+	<li>seven</li>
+	<li>eight</li>
+	<li>nine</li>
+  </ul>
+
+</div>
+</div>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn2">
+<br><br>
+<div id="result2">
+ <table border="1">
+ 	<tr>
+ 		<td>1</td>
+ 		<td>2</td>
+ 	</tr>
+  	<tr>
+ 		<td>1</td>
+ 		<td>2</td>
+ 	</tr>
+  	<tr>
+ 		<td>1</td>
+ 		<td>2</td>
+ 	</tr>
+  	<tr>
+ 		<td>1</td>
+ 		<td>2</td>
+ 	</tr>
+  	<tr>
+ 		<td>1</td>
+ 		<td>2</td>
+ 	</tr>
+  	<tr>
+ 		<td>1</td>
+ 		<td>2</td>
+ 	</tr>
+ 	
+ 
+ </table>
+ 
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+today = new Date();
+
+proc1 = () =>{
+	//태어난 날 
+	myday = new Date("2000. 6. 20");
+	
+	ctime = today.getTime();
+	mytime = myday.getTime();
+	
+	console.log(ctime, mytime);
+	
+	times = ctime - mytime ;
+	
+	days = times /1000 /60 /60 /24 /365;
+	
+	str = "현재 : " + today.toLocaleDateString() + "<br>";
+	str += "내생일 : " + myday.toLocaleDateString() + "<br>";
+	str += days + "년 동안 살고 있습니다  ";
+	
+	document.getElementById('result1').innerHTML = str;
+	
+	
+}
+
+proc2 = () => {
+	
+   totime = today.getTime();
+   
+   //100일의 getTime
+   time100 = 24 * 60 * 60 * 1000 *100 ;
+   
+   times =  totime + time100;
+   
+   //새로운 날짜 생성 
+   day100  = new Date(times);
+   
+   console.log(day100);
+   
+   str = "현재 : " + today.toLocaleDateString() + "<br>";
+   str += "100일 후 : " +  day100.toLocaleDateString() + "<br>";
+   
+   document.getElementById('result2').innerHTML = str;
+   
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4> 태어난 날로부터 현재 까지 경과한 날  </h4>
+<input type="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4> 100일 경과후 의 날짜 구하기   </h4>
+<input type="button" value="확인" onclick="proc2()">
+<br><br>
+<div id="result2"></div>
+</div>
+
+
+<div class="box">
+<h4> 선택날로부터 현재 까지 7일 경과 비교 <br>
+반품/환불/교환 여부를 결정   </h4>
+<br>
+
+ 날짜 선택  <input type="date" id="inday">
+<input type="button" value="확인" onclick="proc3()">
+<br><br>
+<div id="result3"></div>
+</div>
+
+
+</body>
+</html>

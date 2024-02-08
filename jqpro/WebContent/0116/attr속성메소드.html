@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	$('#btn1').on('click',function(){
+		$('#result1 img').attr('title',function(){
+			vsrc = $(this).attr('src');
+			
+			start = vsrc.lastIndexOf("/")+1;
+			end = vsrc.lastIndexOf(".");
+			 vtitle = vsrc.slice(start,end);
+			return vtitle;
+		})
+	})
+	
+	$('#result2 img').on('mouseover',function(){
+		//새로운 이미지 변경
+		
+		//src 속성 값을 가져오기
+		vsrc = $(this).attr('src')
+		//name 속성의 값을 가져오기
+		vname = $(this).attr('name')
+		//name 속성 값으로 src속성을 변경
+		$(this).attr('src',vname)
+	})
+	
+	$('#result2 img').on('mouseout',function(){
+		//원래 이미지로 변경
+		$(this).attr('src',vsrc);
+	})
+	
+	$('#result2 img').on('dblclick',function(){
+		//대상 이미지를 안보이게 설정한다.
+		$(this).hide();
+		//$(this).css('display','none');
+		
+		//비교- 보이는 이미지 갯수 0이면 확인 버튼을 보이게 설정
+		if($('#result2 img:visible').length<1){
+			$('#btn2').show();
+		}
+	})
+	
+	$('#btn2').on('click',function(){
+		$('#result2 img').show();
+		$(this).hide();
+	})
+})
+</script>
+<style>
+img{
+	width : 80px;
+	height : 80px;
+}
+#btn2{
+	dispaly : none;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn1">
+<br><br>
+<div id="result1">
+	<img src="../images/지구.jpeg" alt="지구.jpeg">
+	<img src="../images/지구2.jpeg" alt="지구2.jpeg">
+	<img src="../images/지구3.jpeg" alt="지구3.jpeg">
+	<img src="../images/우주1.jpeg" alt="우주1.jpeg">
+	<img src="../images/우주2.jpeg" alt="우주2.jpeg">
+</div>
+</div>
+
+<div class="box">
+<h4>마우스 over시에 이미지가 변경<br>
+마우스  out시 원래 이미지로 돌아옴</h4>
+<input type ="button" value="확인" id="btn2">
+<br><br>
+<div id="result2">
+	<img src="../images/지구.jpeg" alt="지구.jpeg" name="../images/무지게1.png">
+	<img src="../images/지구2.jpeg" alt="지구2.jpeg" name="../images/무지게2.png">
+	<img src="../images/지구3.jpeg" alt="지구3.jpeg" name="../images/무지게3.png">
+	<img src="../images/우주1.jpeg" alt="우주1.jpeg" name="../images/무지게4.png">
+	<img src="../images/우주2.jpeg" alt="우주2.jpeg" name="../images/무지게5.png">
+</div>
+</div>
+</body>
+</html>

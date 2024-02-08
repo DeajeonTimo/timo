@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tboard">
+
+	<select id="selectTBoard" parameterType="String"
+		resultType="tboardVO">
+		select b.T_NO
+		,b.TB_TITLE
+		,b.TB_CONTENT
+		,b.TB_CNT
+		,b.TB_LOC
+		,b.TB_LOC2
+		,TO_CHAR(b.TB_PRICE , 'FM999,999,999,999,999') AS TB_PRICE
+		,b.TB_OFFER from (select * from trade
+		where c_middlecat=#{mid} order by t_date
+		desc) a,t_board b where a.t_no=b.t_no
+	</select>
+
+
+	<select id="selectTBoardOne" parameterType="String"
+		resultType="tboardVO">
+		select T_NO
+		,TB_TITLE
+		,TB_CONTENT
+		,TB_CNT
+		,TB_LOC
+		,TB_LOC2
+		,TO_CHAR(TB_PRICE , 'FM999,999,999,999,999') AS TB_PRICE
+		,TB_OFFER from t_board where t_no=#{tid}
+	</select>
+
+	<select id="selectTradeOne" parameterType="String"
+		resultType="tradeVO">
+		<![CDATA[	
+		select T_NO,
+C_MIDDLECAT,
+EMAIL,
+T_TYPE,
+CASE 
+				WHEN (SYSDATE-T_DATE)*24 < 1 THEN TRUNC((SYSDATE-T_DATE)*24*60)||'분 전'
+				WHEN (SYSDATE-T_DATE)*24 < 24 THEN TRUNC((SYSDATE-T_DATE)*24)||'시간 전'
+				WHEN (SYSDATE-T_DATE)*24 < 168 THEN TRUNC(SYSDATE-T_DATE)||'일 전'
+			ELSE TO_CHAR(T_DATE) END AS T_DATE,
+T_RECENTDATE,
+T_STATE from trade where t_no=#{tid}
+		]]>
+	</select>
+
+	<select id="selectTradeOneForTno" parameterType="String"
+		resultType="String">
+		select trade_seq.currval from dual
+	</select>
+
+	<select id="tImage" parameterType="String" resultType="String">
+		select
+		img_src
+		from
+		IMAGES
+		where
+		img_code = #{t_no}
+		order by
+		img_src
+	</select>
+
+	<insert id="addUView" parameterType="uviewVO">
+		insert into u_view
+		values(sysdate,#{email},#{t_no})
+	</insert>
+
+	<insert id="tImageInsert" parameterType="tboardVO">
+		INSERT INTO images
+		VALUES (
+		#{t_no},
+		#{fileName}
+		)
+
+	</insert>
+
+	<insert id="addTrade" parameterType="tradeVO">
+		insert into trade
+		values(LPAD(trade_seq.nextval,11,'0'),#{c_middlecat},#{email},${t_type},sysdate,sysdate,0)
+	</insert>
+
+	<insert id="addTBorad" parameterType="tboardVO">
+		insert into t_board
+		values(LPAD(trade_seq.currval,11,'0'),
+		#{tb_title},#{tb_content},0,#{tb_loc},#{tb_loc},#{tb_price},#{tb_offer})
+	</insert>
+
+	<select id="selectCatMiddleOne" resultType="catMiddleVO"
+		parameterType="String">
+		SELECT b.c_name,
+		a.C_LARGECAT,
+		b.C_MIDDLECAT
+		FROM CAT_LARGE
+		a RIGHT JOIN CAT_MIDDLE b
+		ON a.C_LARGECAT = b.C_LARGECAT
+		where
+		b.c_largecat=#{c_largecat}
+		ORDER BY
+		C_MIDDLECAT
+	</select>
+
+	<update id="upCnt" parameterType="String">
+		update t_board set TB_CNT=TB_CNT+1
+		where t_no=#{t_no}
+	</update>
+</mapper>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- <link rel="stylesheet" href="../CSS/public.css"> -->
+ <script src="../js/jquery-3.7.1.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+$(()=>{
+	
+	$('#prod').on('change',function(){
+		
+		prodid =$('option:selected',this).val().trim();
+		
+		$.ajax({
+			url : '/jqpro/0122/prodIdServlet.jsp',
+			type : 'post',
+			//data : 'id='+prodid,
+			data : JSON.stringify({"prod_id" :prodid}),
+			success : function(res){
+					code="<table class='table table-striped'>";
+					code+="<tr><td>항목</td> <td>내용</td></tr>";
+					code+="<tr><td>prod_id</td> <td>"+res.prod_id+"</td></tr>";
+					code+="<tr><td>prod_name</td> <td>"+res.prod_name+"</td></tr>";
+					code+="<tr><td>prod_lgu</td> <td>"+res.prod_lgu+"</td></tr>";
+					code+="<tr><td>prod_buyer</td> <td>"+res.prod_buyer+"</td></tr>";
+					code+="<tr><td>prod_cost</td> <td>"+res.prod_cost+"</td></tr>";
+					code+="<tr><td>prod_price</td> <td>"+res.prod_price+"</td></tr>";
+					code+="<tr><td>prod_sale</td> <td>"+res.prod_sale+"</td></tr>";				
+					code+="</table>";
+					$('#result1').html(code);
+				
+			},
+			errorr : function(xhr){
+				alert("상태 : "+ xhr.status);
+			},
+			dataType : 'json'
+		})
+	})
+	
+
+	
+	//lprod의 제품을 선택하면 prod제품을 출력
+	$('#lprod').on('change',function(){
+		//lprod에서 선택한 항목의 option value값을 가져 온다.
+		//alert($("option:selected",this).val());
+		guvlaue = $("option:selected",this).val().trim();
+		obj = {"prod_lgu" : guvlaue};
+		
+		//서버로 전송
+		$.ajax({
+			url : '/jqpro/0122/prodLguServlet.jsp',
+			type : 'post',
+			//data : 'gu=' + guvlaue,
+			data : JSON.stringify(obj),
+			success : function(res){
+				code = "";
+				if(res.flag=="ok"){
+				$.each(res.datas, function(i,v){
+					code += `<option value="${v.prod_id}">${v.prod_name}</option>`
+					$('#prod').html(code);
+					$('#prod').trigger('change');
+				})
+				}else{
+					code += `<option value=0>데이터없음</option>`
+					vimg = $('<img src="../images/ccc.jpg" art="ccc.jpg">');
+					$('#result1').empty();
+					$('#result1').append(vimg);
+					$('#prod').html(code);
+				}
+
+			},
+			error : function(xhr){
+				alert("상태 : " + xhr.status);
+			},
+			dataType : 'json'
+		})
+	})
+	
+	
+	//lprod가 출력
+	$('#btn1').on('click', ()=>{
+		$.ajax({
+			url : '/jqpro/0119/LprodList.jsp',
+			type : 'get',
+			success : (res) =>{
+				//alert("성공")
+				code = "";
+				$.each(res, function(i,v){
+					code += `<option value="${v.lprod_gu}">${v.lprod_nm}</option>`
+				})
+				
+				$('#lprod').html(code);
+				//$('#lprod').append(code);
+				
+			},
+			error : function(xhr){
+				alert("상태 : " + xhr.status)
+			},
+			dataType : 'json'
+			
+		})
+	})
+})
+
+</script>
+
+<style>
+</style>
+
+</head>
+<body>
+
+<div class="box">
+   <h4></h4>
+   <input type="button" value="Lprod리스트" id="btn1" class="btn btn-outline-info"> 
+   <br><br>
+<div class="container mt-3">
+  <h2>Select Menu</h2>
+  <p>To style a select menu in Bootstrap 5, add the .form-select class to the select element:</p>
+ 
+    <label for="lprod" class="form-label">lprod list </label>
+    <select class="form-select" id="lprod" name="sellist1">
+	</select>
+    <br>
+    
+    <label for="prod" class="form-label">prod list</label>
+    <select  class="form-select" id="prod" name="sellist2">
+
+    </select>
+  
+ 
+</div>
+   <div id="result1"></div>
+</div>
+</body>

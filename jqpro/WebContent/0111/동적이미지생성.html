@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<style>
+img{
+	width : 100px;
+	height : 100px;
+}
+</style>
+<script>
+
+arr = ["Penguins.jpg","그대만있다면.jpg","수박.png","아메리카노.jpg","우주1.jpeg"]
+
+$(document).ready(function(){
+
+	$('#btn1').on('click',()=>{
+		rand = Math.floor(Math.random()*arr.length);
+		//이미지 생성
+		//vimg = $('<img onclick="borderProc(this)" src="../images/좋은밤좋은꿈.jpg" alt ="좋은밤좋은꿈.jpg">') ;
+		vimg = $('<img>',{
+			'src'   : '../images/'+arr[rand],
+			'alt'   : arr[rand],
+			'click' : procBorder
+			/* 'click' : function(){
+				$(this).css('border', '2px soild red');
+			}	 */
+		})
+		
+		
+		
+		
+		//result1에 추가한다.
+//		$('#result1').append(vimg);
+		$(vimg).appendTo($('#result1'))
+	})
+	
+	procBorder = function(){
+		$(this).css('border', '3px solid red');
+	}
+	
+	
+	
+	borderProc = function(vm){
+		//vm.style.border = "3px solid red";
+		$(vm).css('border', '3px solid red');
+	}
+})
+
+
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="이미지만들기" id="btn1">
+<br><br>
+<div id="result1"></div>
+</div>
+</body>
+</html>

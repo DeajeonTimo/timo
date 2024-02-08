@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+
+label{
+	display : inline-block;
+	width : 120px;
+	height : 30px;
+}
+div{
+	border : 1px solid blue;
+	width : 480px;
+	padding : 30px;
+}
+#addr{
+width : 263px;
+}
+button{
+	width:200px;
+}
+
+</style>
+</head>
+<body>
+<h3>회원가입 페이지</h3>
+<div>
+<form>
+
+<label class="lab">아이디</label>
+<input name="id" required autofocus pattern="[a-z][a-zA-Z0-9]{3,9}">
+<input type="submit" value="중복검사"><br>
+
+<label class="lab">패스워드</label>
+<input type="password" name="pass"><br>
+
+<label class="lab">패스워드 확인</label>
+<input type="password" name="pass"><br>
+
+<label class="lab">이름</label>
+<input name="name" required><br>
+
+<label class="lab">휴대폰 번호</label>
+<input name="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" placeholder="010-0000-0000"><br>
+
+<label class="lab">이메일</label>
+<input name ="email" pattern ="[a-zA-Z0-9]+@([a-zA-Z]+[0-9]*)(\.[a-zA-Z]+){1,2}" > <br>
+
+<label class="lab">생일</label>
+<input type="date" name="bir"><br>
+
+<label class="lab2">홈페이지</label>
+<input name="addr3" id="addr" ><br>
+
+<label class="lab">성별</label>
+<input type="radio" name="gent" value="남자"> 남 
+<input type="radio" name="gent" value="여자"> 여<br>
+
+
+<br>
+<button type="submit">제출</button>
+<button type="reset">초기화</button>
+</form>
+</div>
+</body>
+</html>

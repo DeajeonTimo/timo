@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+proc1 = () =>{
+	const fruits = ["사과", "바나나", "복숭아","자두", "딸기", "수박"];
+	printArr(fruits,'result1');
+}
+proc2 = () =>{
+	const fruits =new Array("파인애플", "망고", "복숭아","자두", "딸기", "수박");
+	printArr(fruits,'result2');
+}
+proc3 = () =>{
+	const fruits = []; // const fruits = new Array();
+	fruits[0] = "배";
+	fruits[1] = "감귤";
+	fruits[2] = "복숭아";
+	fruits[3] = "자두";
+	fruits[4] = "딸기";
+	fruits[5] = "수박";
+	printArr(fruits,'result3');
+}
+printArr = (fr,out) =>{
+	//document.getElementById(out).innerHTML = fr;
+	str="";
+	/* for(i=0; i<fr.length; i++){
+		str +=fr[i] + " ";
+	} */
+	for(i in fr){
+		//str += fr[i] = " ";
+		str += `${fr[i]} `;
+	}
+	document.getElementById(out).innerHTML = str;
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4>리터럴로 배열 생성<br>
+const fruits = ["사과", "바나나", "복숭아","자두", "딸기", "수박"];</h4>
+<input type ="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4>리터럴로 배열 생성<br>
+const fruits =new Array ("파인애플", "망고", "복숭아","자두", "딸기", "수박");</h4>
+<input type ="button" value="확인" onclick="proc2()">
+<br><br>
+<div id="result2"></div>
+</div>
+
+<div class="box">
+<h4>리터럴로 배열 생성<br>
+const fruits = [];
+const fruits = new Array();</h4>
+<input type ="button" value="확인" onclick="proc3()">
+<br><br>
+<div id="result3"></div>
+</div>
+</body>
+</html>

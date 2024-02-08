@@ -1,0 +1,51 @@
+package sangchu.chat.service;
+
+import java.util.List;
+
+import sangchu.chat.dao.ChatDaoImpl;
+import sangchu.chat.dao.IChatDao;
+import sangchu.chat.vo.ChatDetailVO;
+import sangchu.chat.vo.ChatVO;
+
+public class ChatServiceImpl implements IChatService {
+	private IChatDao dao;
+	private static IChatService service;
+	private ChatServiceImpl() {
+		dao = ChatDaoImpl.getInstance();
+	}
+	public static IChatService getInstance() {
+		if(service ==null) service = new ChatServiceImpl();
+		return service;
+	}
+	
+	
+	@Override
+	public ChatVO getChatVO(String c_no) {
+		return dao.getChatVO(c_no);
+	}
+
+	@Override
+	public List<ChatVO> getAllChatList(String email) {
+		return dao.getAllChatList(email);
+	}
+
+	@Override
+	public List<ChatDetailVO> getChatLog(String c_no) {
+		return dao.getChatLog(c_no);
+	}
+
+	@Override
+	public int insertChatLog(ChatDetailVO vo) {
+		return dao.insertChatLog(vo);
+	}
+
+	@Override
+	public int insertNewChat(String t_no) {
+		return dao.insertNewChat(t_no);
+	}
+	@Override
+	public String emailImage(String email) {
+		return dao.emailImage(email);
+	}
+
+}

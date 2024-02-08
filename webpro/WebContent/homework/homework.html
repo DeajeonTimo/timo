@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+header{
+	heigth  : 400px;
+	border : 2px solid pink;
+}
+				
+nav{
+	heigth  : 200px;
+	border : 2px solid pink;	
+}
+nav ul{			
+  list-style: none;				
+  text-align: center;			  
+  padding: 10px 0;	
+}
+nav ul li{
+  display: inline;
+  text-transform: uppercase;
+  padding : 0 10px;
+  letter-spacing: 10px;
+}	
+
+nav ul li a {
+	text-decoration: none;
+	color: black;
+}
+nav ul li a:hover {
+	text-decoration: underline; 
+}					
+
+
+#left{
+ 	float : left;
+	width : 230px;
+	height : 500px;
+	border : 2px solid pink;
+	background-color: lightgray;
+}
+#left h3{
+	text-align: center;
+	font-size: 1.5em;
+	color : blue;
+}
+
+
+
+#left ul{
+	padding-left : 0px;
+	list-style-type: none;
+	background-color: lightgray;
+}
+#left ul li{
+	list-style-type: none;
+	
+	text-align: center;
+	width : 180px;
+	height : 40px;
+	background-color: white;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+section{
+ 	float : left;
+	width : 1400px;
+	height : 500px;
+	border : 2px solid pink;
+	margin-left : 5px;
+	margin-right : 5px;
+}
+
+#ifr{
+	width : 1350px;
+	height: 480px;
+	margin-left : 20px;
+	margin-right : 20px;
+	
+}
+#right{
+	float : right; 
+	width : 230px;
+	height : 500px;
+	border : 2px solid pink;
+}
+footer{
+	clear : both;
+	heigth  : 400px;
+	border : 2px solid pink;
+}	
+
+
+</style>
+</head>
+<body>
+
+	<header id="header">
+		<h1>
+			<img alt="쇼핑2" src="../images/쇼핑2.png" width = 100px; height=70px>
+			<a href="">쇼핑몰</a>
+		</h1>
+	</header>
+	<nav>
+		<ul>
+			<li><a href="">Home</a></li>
+			<li><a href="">About Us</a></li>
+			<li><a href="">News</a></li>
+			<li><a href="">My Account</a></li>
+			<li><a href="">Contacts</a></li>
+		</ul>
+	</nav>
+	
+	<aside id=left>
+		<h3>카테고리</h3>
+		<ul>
+			<li><a href="computer.html" target="ifr1">컴퓨터</a></li>
+			<li><a href="clothes.html" target="ifr1">의류</a></li>
+			<li><a href="music.html" target="ifr1">음악</a></li>
+			<li><a href="movie.html" target="ifr1">영화</a></li>
+			<li><a href="sports.html" target="ifr1">스포츠/레져</a></li>
+			<li><a href="funiture.html" target="ifr1">가구/인테리어</a></li>
+			<li><a href="food.html" target="ifr1">식품</a></li>
+		</ul>
+	</aside>
+	
+	<section>
+		<article id="arcicle1">
+		    <iframe id="ifr" src=computer.html name=ifr1> 
+            </iframe>
+		</article>
+	</section>
+	<aside id=right>
+		<div id="shopcart">    
+        	<h4>Shopping Cart</h4>
+        	<p>현재 쇼핑카트에 물품이 없습니다.</p>
+        	<a href="cart.html">쇼핑카트보기</a>
+        </div>
+        <div id="login">
+            <h4>Log In</h4>
+            <form action="" >
+            	<input type="text" name="id" value="아이디">  	
+            	<input type="text" name="pass" value="패스워드"><br>  	
+            	<input type="submit">  	
+            	<input type = "reset"><br>
+            	<a href="signup.html">회원가입</a>  	
+            	<a href="">비밀번호분실</a>  	
+            </form>
+        </div>
+		
+	</aside>
+	<footer>
+	<pre>
+기관명 : (재)대덕인재개발원  주소 : 대전광역시 중구 계룡로 846, 3-4층
+사업자등록번호 : 306-82-05291 대표전화 : 042-222-8202 
+COPYRIGHT © 2020 (재)대덕인재개발원 ALL RIGHTS RESERVED</pre>
+	</footer>
+
+</body>
+</html>

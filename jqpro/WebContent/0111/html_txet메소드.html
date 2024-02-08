@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js" ></script>
+<style>
+span{
+background: pink;
+}
+</style>
+<script>
+/* $(document).ready(() =>{
+	
+})
+
+$(function(){})
+ */
+$(()=>{
+	$('#btn1').on('click',()=>{
+		alert($('body').html());
+	})
+	$('#btn2').on('click',()=>{
+		alert($('body').text());
+	})
+	$('#btn3').on('click',()=>{
+//		alert($('#result2 p').html());
+		vphtml = $('#result2 p').html();
+		$('#result3').html(vphtml);
+//		$('#result3').text(vphtml);
+	})
+	$('#btn4').on('click',()=>{
+	//	alert($('#result2 p').text());
+		vptext = $('#result2 p').text();
+//		$('#result3').text(vptext);
+		$('#result3').html(vptext);
+	})
+	
+	$('#btn5').on('click',()=>{
+		vp4="";
+		//반복문
+		$('#result4 p').each(function(x,y){
+//			alert($('#result4 p').html());
+
+			vp4 += $('p').eq(x).html() + "<br>";
+//			vp4 += $(y).html()+"<br>";
+//			vp4 += $(this).html()+"<br>";
+		})
+		$('#result5').html(vp4)
+	})
+	
+	
+	
+	
+	
+})
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4>$('body').html() : 대상인 body 객체의 모든 태그를 포함한 문장<br>
+$('body').text() : 대상인 body 객체의 모든 문자
+</h4>
+<input type ="button" value="html" id="btn1">
+<input type ="button" value="text" id="btn2">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4>$('p').html() : 대상인 p 객체의 첫번째 p 태그가 포함한 문장<br>
+$('p').text() : 대상인 p 객체의 모든 문자
+</h4>
+<input type ="button" value="html" id="btn3">
+<input type ="button" value="text" id="btn4">
+<br><br>
+<div id="result2">
+<p><span>무궁화</span> 꽃이 피었습니다</p>
+<p><span>사랑은</span> 늘도망가</p>
+<p><span>별빛같은</span> 나의 사랑아</p>
+<p><span>이제 다시</span> 만날수 있을까</p>
+<p><span>우리들의</span> 블루스</p>
+</div>
+<div id="result3"></div>
+</div>
+
+<div class="box">
+<h4>$('p').html() : 대상인 p 객체의 첫번째 p 태그가 포함한 문장<br>
+반복문을 이용하여 전체P태그를 생성
+$('p').text() : 대상인 p 객체의 모든 문자
+</h4>
+<input type ="button" value="html" id="btn5">
+<br><br>
+<div id="result4">
+<p><span>무궁화</span> 꽃이 피었습니다</p>
+<p id="love"><span>사랑은</span> 늘도망가</p>
+<p><span>별빛같은</span> 나의 사랑아</p>
+<p><span>이제 다시</span> 만날수 있을까</p>
+<p><span>우리들의</span> 블루스</p>
+</div>
+<div id="result5"></div>
+</div>
+</body>
+</html>

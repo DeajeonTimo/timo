@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+div{
+  border : 1px dotted orange;
+  margin : 10px;
+  padding : 10px;
+}
+ #d1 p:first-child{
+    color : blue;
+ }
+ #d1 p:nth-child(3){
+    color : red;
+ }
+ 
+ .dd p:first-child{
+     background-color : pink;
+ }
+ 
+ #d4 p:nth-child(2n){
+    font-size : 1.5rem;
+    color : green;
+ }
+/*  #d5 p:nth-child(2n+1){
+ } */
+ #d5 .pod{
+    border : 2px dotted gold;
+
+ }
+</style>
+</head>
+<body>
+<div id="d1" class="dd">
+  <p>무궁화 꽃이 피었습니다</p>
+  <p>사랑은 늘 도망가</p>
+  <p>별빛같은 나의 사랑아</p>
+</div>
+
+<div id="d2" class="dd">
+  <p>무궁화 꽃이 피었습니다 </p>
+  <p>사랑은 늘 도망가</p>
+  <p>별빛같은 나의 사랑아</p>
+</div>
+
+<div id="d3" class="dd">
+  <p>무궁화 꽃이 피었습니다 </p>
+  <p>사랑은 늘 도망가</p>
+  <p>별빛같은 나의 사랑아</p>
+</div>
+
+
+<div id="d4" >
+  <p>무궁화 꽃이 피었습니다 </p>
+  <p>사랑은 늘 도망가</p>
+  <p>별빛같은 나의 사랑아</p>
+  <p>이제 나만 믿어요</p>
+  <p>다시 만날 수 있을까</p>
+</div>
+
+<div id="d5" >
+  <p class="pod">무궁화 꽃이 피었습니다 </p>
+  <p>사랑은 늘 도망가</p>
+  <p class="pod">별빛같은 나의 사랑아</p>
+  <p>이제 나만 믿어요</p>
+  <p class="pod">다시 만날 수 있을까</p>
+</div>
+
+
+
+</body>
+</html>

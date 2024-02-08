@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+class User{
+	constructor(name){
+		this.name = name;
+	}
+	sayHi(){
+		alert(this.name);
+	}
+}
+/* alert(typeof User); */
+ user = new User('korea');
+ console.log(user);
+ user.sayHi();
+ 
+ proc1 = () =>{
+	 user2 = new User("나성진");
+	 user2.sayHi();
+ }
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+</body>
+</html>

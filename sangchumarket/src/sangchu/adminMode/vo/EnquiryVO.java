@@ -1,0 +1,40 @@
+package sangchu.adminMode.vo;
+
+public class EnquiryVO {
+	private String e_no;
+	private String email;
+	private String e_accuser;
+	private String e_target;
+	private String u_stopdate;
+	public String getU_stopdate() {
+		return u_stopdate;
+	}
+	public void setU_stopdate(String u_stopdate) {
+		this.u_stopdate = u_stopdate;
+	}
+	public String getE_no() {
+		return e_no;
+	}
+	public void setE_no(String e_no) {
+		this.e_no = e_no;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getE_accuser() {
+		return e_accuser;
+	}
+	public void setE_accuser(String e_accuser) {
+		this.e_accuser = e_accuser;
+	}
+	public String getE_target() {
+		return e_target;
+	}
+	public void setE_target(String e_target) {
+		this.e_target = e_target;
+	}
+
+}

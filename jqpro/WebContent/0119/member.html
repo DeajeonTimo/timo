@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	
+	$('#btn2').on('click',()=>{
+		fetch('/jqpro/0119/MemberList.jsp')
+		.then(resp =>{
+			return resp.json();
+		})
+		.then(res =>{
+			code = "<table border='1'>";
+			code+="<tr><td>아이디</td>";
+			code+="<td>이름</td>";
+			code+="<td>전화번호</td></tr>";
+			
+			$.each(res, function(i,v){
+				code += `<tr><td>${res[i].mem_id}</td>`;
+				code += `<td>${res[i].mem_name}</td>`;
+				code += `<td>${res[i].mem_hp}</td></tr>`;
+			})
+			code += "</table>"
+			
+			$('#result2').html(code);
+		})
+		
+		
+	})
+	
+	
+	$('#btn1').on('click',()=>{
+		
+		$.ajax({
+			url : "/jqpro/0119/MemberList.jsp",
+			type : "get",
+			success : function(res){
+				// alert("성공"); 
+				code = "<table border='1'>";
+				code+="<tr><td>아이디</td>";
+				code+="<td>이름</td>";
+				code+="<td>전화번호</td></tr>";
+				
+				$.each(res, function(i,v){
+					code += `<tr><td>${res[i].mem_id}</td>`;
+					code += `<td>${res[i].mem_name}</td>`;
+					code += `<td>${res[i].mem_hp}</td></tr>`;
+				})
+				code += "</table>"
+				$('#result1').html(code);
+			},
+			error : function(xhr){
+				alert("상태 :" + xhr.status);
+			},
+			dataType : 'json'
+		})
+	})
+})
+
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn1">
+<input type ="button" value="확인" id="btn2">
+<br><br>
+<div id="result1"></div>
+<div id="result2"></div>
+</div>
+</body>
+</html>

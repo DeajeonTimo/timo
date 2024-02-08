@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	$('p').on('click',function(){
+		
+		
+		
+		
+		
+		
+//		console.log($(this).css('font-size'));
+//		$(this).css('font-size','+=1.2rem')
+		
+		
+		//부모 찾기
+		vparent = $(this).parent();
+		
+		if(vparent.is('.result')){
+			$(this).clone(true).appendTo(vparent).css('color','red');
+		}else{
+			alert("작업 대상이 아닙니다.")
+		}
+	})
+	
+	$('.pp').on('click',function(){
+//		$(this).css('color','red');
+		$(this).addClass('bcolor');
+	})
+})
+</script>
+<style>
+p{
+	background : gold;
+}
+.result{
+	background : yellow;
+}
+
+.bcolor{
+	color : blue;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<br><br>
+<div id="result1" class="result">
+	<p>무궁화꽃이피었습니다</p>
+</div>
+	<p>은주는예쁘다</p>
+<div id="result2" class="result">
+	<p>사랑은늘도망가</p>
+</div>
+</div>
+
+<div class="box">
+<h4></h4>
+<br><br>
+<div id="result3" class="result">
+	<p class="pp"> class="pp" 무궁화꽃이피었습니다</p>
+</div>
+	<p>은주는예쁘다</p>
+<div id="result4" class="result">
+	<p class="pp">class="pp" 사랑은늘도망가</p>
+</div>
+</div>
+</body>
+</html>

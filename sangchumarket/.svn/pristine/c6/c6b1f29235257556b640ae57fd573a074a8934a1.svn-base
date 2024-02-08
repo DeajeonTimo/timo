@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>개인정보 수집 동의</title>
+  <style>
+    body{
+        background-color: white;
+    }
+
+</style>  
+</head>
+
+<body>
+        수집하는 개인정보 항목<br>
+        이름 , 이메일 , 비밀번호 , 휴대폰 번호 , 주거지역 </td>
+        
+        <br><br>수집 및 이용목적<br>
+        회원제 서비스 이용에 따른 본인확인 , 개인 식별 , 불량회원의 부정 이용 방지와 비인가 사용 방지 , 가입 의사 확인 , 불만처리 등 민원처리 , 고지사항 전달</td>
+        
+        <br><br>보유 및 이용기간<br>
+        회원탈퇴 단, 관계 법령에 따라 개인정보를 보존해야 하는 경우, 회사는 해당 법령에서 정한 기간동안 보관합니다.<br><br>
+        ※ 동의 거부 시 회원가입이 불가능합니다.
+     
+</body>
+</html>
+</head>
+<body>
+
+</body>
+</html>

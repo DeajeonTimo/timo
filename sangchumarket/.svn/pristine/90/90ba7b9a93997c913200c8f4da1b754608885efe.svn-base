@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 문서는 myBatis에서 처리할 SQL문을 작성하는 문서입니다. -->
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 최초 작성자 : 박민주 최초 작성일 : 2023.08.08 00:05 .... 미완성 -->
+<mapper namespace="member">
+
+	<!--[1차 회원가입] 이메일 중복검사 -->
+	<select id="checkEmail" parameterType="String"
+		resultType="String">
+		select email userEmail from all_users where email=#{email}
+	</select>
+
+	<!--[1차 회원가입] 1차 회원가입 정보 입력 -->
+	<insert id="insertFristSignup" parameterType="memVO">
+		insert into
+		all_users (email, pass, name, logindate, a_code)
+		values (#{email}, #{pass}, #{name}, sysdate, '1')
+	</insert>
+
+	<!--[2차 회원가입] a_code확인 -->
+	<select id="checkACode" parameterType="String"
+		resultType="String">
+		select A_code from all_users where email=#{email}
+	</select>
+
+	<!--[2차 회원가입] 닉네임 중복검사 -->
+	<select id="checkNickname" parameterType="String"
+		resultType="String">
+		select U_nick from users where U_nick=#{nick}
+	</select>
+
+	<!-- [2차 회원가입] -->
+	<insert id="insertSecondSighup" parameterType="memVO">
+		insert into users
+		(email, U_birth, U_gender, U_nick, U_tel, U_loc, U_loc2, U_update,
+		U_temppass, U_regdate, U_marketing, u_try)
+		values (#{email}, #{u_birth}, #{u_gender}, #{u_nick}, #{u_tel}, #{u_loc},
+		#{u_loc2}, sysdate, '0', sysdate, #{u_marketing}, '0')
+	</insert>
+
+	<!--[로그인] 아이디&비밀번호가 존재하는지 -->
+	<select id="login" parameterType="memVO" resultType="int">
+		select
+		count(*) from all_users where email=#{email} and pass=#{pass}
+	</select>
+
+	<!-- [로그인] ull_users, users 테이블에서 튜플 한줄 선택 -->
+	<select id="getAllMemberInfo" parameterType="String"
+		resultType="memVO">
+		select all_users.*, users.*
+		from all_users
+		inner join users on all_users.email = users.email
+		where all_users.email =
+		#{email}
+	</select>
+
+	<!-- [로그인] (실패) 시도 횟수 count+1 -->
+	<update id="updateLoginTry" parameterType="String">
+		update users set
+		U_TRY= (U_TRY+1) where email=#{email}
+	</update>
+
+	<!-- [로그인] (성공) 시도 횟수 0으로, 탈퇴일 null로 -->
+	<update id="updateTryToZero" parameterType="String">
+		update users set
+		U_TRY= 0, U_WITHDRAWDATE=null where email=#{email}
+	</update>
+
+	<!-- [회원가입] 대분류 카테고리 이름을 매개변수로 중분류 카테고리 VO 가져오기 -->
+	<select id="getMiCatfromLaCat" parameterType="String"
+		resultType="catMiddleVO">
+		SELECT a.c_largecat, b.c_name, b.c_middlecat
+		FROM CAT_LARGE a RIGHT JOIN
+		CAT_MIDDLE b
+		ON a.C_LARGECAT = b.C_LARGECAT
+		WHERE a.c_name = #{c_name}
+	</select>
+
+	<!-- [회원가입] 이메일과 관심카테고리 저장 -->
+	<insert id="insertInterest" parameterType="interestVO">
+		insert into u_interest
+		(email, c_middlecat) values (#{email}, #{c_middlecat})
+	</insert>
+
+
+	<!-- [회원가입] 사용자 이미지 업로드 -->
+	<insert id="uploadUserImage" parameterType="imagesVO">
+		insert into images
+		(Img_code, Img_src) values (#{img_code}, #{img_src})
+	</insert>
+
+	<!-- 회원가입 성공시 a_code를 3으로 바꿔주는 메소드 (사용가능 상태) -->
+	<update id="updateA_code" parameterType="String">
+		update all_users set
+		a_code='2' where email=#{email}
+	</update>
+
+
+	<select id="findEmail" parameterType="memVO" resultType="String">
+		select
+		all_users.email
+		from all_users
+		inner join users on all_users.email = users.email
+		where
+		all_users.name=#{name} and users.u_birth=#{u_birth} and users.u_tel =
+		#{u_tel}
+	</select>
+
+	<select id="findPass" parameterType="memVO" resultType="String">
+		select all_users.pass
+		from all_users
+		inner join users on all_users.email = users.email
+		where
+		all_users.email=#{email} and all_users.name=#{name} and
+		users.u_birth=#{u_birth} and users.u_tel = #{u_tel}
+	</select>
+
+	<!-- 비밀번호 찾기 시, 임시 비밀번호로 update -->
+	<update id="updateTempPassword" parameterType="memVO">
+		update
+		all_users set pass=#{pass} where email=#{email}
+	</update>
+
+	<!-- //////////////////////////관리자 모드 ////////////////////////// -->
+
+	<!-- 	회원 조회  -->
+	<select id="searchUserEmail" parameterType="String" 	resultType="memVO">
+		select all_users.*, users.*
+		from all_users
+		left outer join users on all_users.email = users.email
+		where all_users.email=#{email}
+	</select>
+	
+<!-- 	관리자 계정으로 회원 정지일 null로  -->
+	<update id="updateStopdate" parameterType="String">
+		update users set u_stopdate=null where email=#{email}
+	</update>
+	
+	<!-- 	정지일 null 회원의 수 count (사용 x) --> 
+	<select id="countUsersHavingStopdate" resultType="int">
+		select count(*) from users where u_stopdate is not null
+	</select>
+	
+	<!-- 	정지일 null 아닌 모든 계정 불러오기 -->
+	<select id="getAllUSeraStopdate" resultType="memVO">
+		select * from users where u_stopdate is not null
+	</select>
+	
+	<!-- 	정지일 null로 (일괄) -->
+	<!-- 	<update id="clearStopdateAll"> -->
+	<!-- 		update users set u_stopdate=null -->
+	<!-- 	</update> -->
+	
+	<!-- 	특정 email을 가진 회원의 정지일 null로 -->
+	<update id="clearStopdate" parameterType="String">
+		update users set u_stopdate=null where email=#{email}
+	</update>
+	
+	<!-- 	모든 신고글 VO 가져오기 -->
+	<select id="getAllEnquiry" resultType="enquiryVO">
+		select * from enquiry
+	</select>
+	
+	<!-- 	특정 신고글 정보 가져오기-->
+	<select id="getEnquiry" resultType="enquiryVO" parameterType="int">
+		select * from enquiry where e_no=#{e_no}
+	</select>
+	
+	<!-- 	회원의 정지일 업데이트 -->
+	<update id="setStopdate" parameterType="memVO">
+	update users set u_stopdate=#{u_stopdate} where email=#{email}
+	</update>
+	
+</mapper>

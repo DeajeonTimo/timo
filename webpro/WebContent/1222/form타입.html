@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<style type="text/css">
+ form {
+    background-color : #faf1d7;
+ }
+</style>
+
+<script type="text/javascript">
+function changeColor(){
+	 //html요소 접근 
+	 vcol = document.querySelector('#col');
+	 vcol = document.getElementById('col')
+	 
+	 //값 가져오기 
+	 cvalue = vcol.value;
+	 console.log(cvalue);
+	 
+	 //연산, 계산 , 비교 , 반복 
+	 
+	 //출력 요소접근 
+	 vform = document.querySelector('#ff');
+	 vform.style.backgroundColor =  cvalue;
+}
+</script>
+
+</head>
+<body>
+<form id="ff" action="타입.jsp" method="post">
+  <label>이름</label>
+  <input type="text" name="name" id="name"><br>
+  
+  <label>이메일</label>
+  <input type="email" name="email"  id="email"><br>
+   
+  <label>전화번호</label>
+  <input type="tel" name="tel" id="tel"><br>
+  
+  <label>생일 </label>
+  <input type="date" name="bir" id="bir"><br>
+  
+  <br>
+  <label>색상변경</label>
+  <input type="color" name="col" id="col" onchange="changeColor()"><br>
+  <br>
+  
+  <img src="../images/check.png" alt="check.png">
+  <br>
+  
+  <input type="image" src="../images/check.png" alt="check.png">
+  <input type="submit" value="전송">
+  <input type="reset">
+  <br><br>
+  <button type="submit">전송</button>
+  <button type="reset">초기화</button>
+  <button type="button">확인</button>
+</form>
+</body>
+</html>
+
+
+
+
+
+
+
+

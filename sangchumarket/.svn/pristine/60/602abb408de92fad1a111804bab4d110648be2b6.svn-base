@@ -1,0 +1,155 @@
+package sangchu.login.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+
+import com.google.gson.Gson;
+
+import sangchu.login.service.ILoginService;
+import sangchu.login.service.LoginServiceImpl;
+import sangchu.main.vo.MemberVO;
+
+@WebServlet("/login.do")
+public class Login extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String email = request.getParameter("email");
+
+		MemberVO memVO = new MemberVO();
+		memVO.setEmail(email);
+
+		ILoginService service = LoginServiceImpl.getInstance();
+		MemberVO vo = service.getAllMemberInfo(email);
+
+		int tryLogin = vo.getU_try();
+		
+		Map<String, Integer> resMap = new HashMap<>();
+		resMap.put("tryLogin", tryLogin);
+		
+		Gson gson = new Gson();
+		String resJson = gson.toJson(resMap);
+		
+		response.setContentType("application/json; charset=utf-8");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(resJson);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		response.setContentType("text/html; charset=utf-8");
+
+		String inputEmail = request.getParameter("email");
+		String inputPass = request.getParameter("password");
+		String checkbox = request.getParameter("checkbox");
+
+		response.setCharacterEncoding("utf-8");
+
+		Cookie cookie = new Cookie("userEmail", inputEmail);
+
+		System.out.println("이메일 저장하기 checkbox =>" + checkbox);
+
+		if (checkbox != null) { // 이메일 기억하기 체크박스 체크시
+			response.addCookie(cookie);
+			
+		} else {// 로그인 기억하기 체크 안되어있을 시
+			cookie.setMaxAge(0); // 쿠키 비우기 (쿠키 유효기간 0으로 set, 브라우저에서 삭제)
+			response.addCookie(cookie);
+		} // checkBox if 문 끝
+
+		ILoginService service = LoginServiceImpl.getInstance();
+		MemberVO memVO = new MemberVO();
+		memVO = service.getAllMemberInfo(inputEmail); // DB에 있는 모든 정보를 memVO에 가져다 놓고
+
+		// 세션에 저장할 새로운 VO (이 VO 에는 비밀번호 저장x)
+		HttpSession session = request.getSession();
+
+		if (memVO != null) { // userVO가 null 이 아니라면, 계정 존재 ==> 로그인 성공
+
+			if (memVO.getPass().equals(inputPass)) { // 이메일 비밀번호 일치
+
+				// 로그인 성공 후에는 세션에 "memVO"라는 세션에 비밀번호 빼고 VO 전체를 저장
+				memVO.setPass("");
+				session.setAttribute("memVO", memVO);
+				
+				/*
+					수정일 : 2023.08.12 12:49
+					수정내용 : 로그인 세션 시간 추가 (30분으로 설정)
+				*/
+				session.setMaxInactiveInterval(30*60); // 초 단위 - 30분
+
+				// inputEmail의 A_code를 확인 (1:admin, 0:user)
+
+				String aCode = memVO.getA_code();
+
+				// userVO 저장된 aCode => admin or user 판단
+				if (aCode.equals("0")) { // admin 계정
+					// 관리자 메인으로 이동
+					request.getRequestDispatcher(request.getContextPath() + "/goManageMenu.do").forward(request, response);
+					return;
+				}else if(aCode.equals("1")) { //이메일 인증 대기 상태
+					PrintWriter writer = response.getWriter();
+					writer.println("<script>alert('이메일 인증 후 다시 시도해주세요.'); history.back(); </script>");
+
+				}
+				
+				else { // user 계정 a_code : 2 (사용가능 상태)
+
+					
+					// 사용자의 마지막 로그인 날짜를 오늘로 변경 & 로그인 시도 횟수를 0으로
+					String today = LocalDate.now().toString();
+					memVO.setLogindate(today);
+					service.updateTryToZero(inputEmail);
+
+					// 유저 메인으로 이동
+					// response.sendRedirect(request.getContextPath() + "/sangchuMain.do");
+
+					// 테스트용으로 user 계정 로그인 성공시 -> 개발원 홈페이지로 이동
+//					response.sendRedirect("https://www.ddit.or.kr/?gclid=Cj0KCQjwldKmBhCCARIsAP-0rfz8IbxFLMWNTt-7JF2JV76wHp0E6M9q64q3AqhqINa5pJpm7fhiYGMaAq36EALw_wcB");
+					response.sendRedirect(request.getContextPath()+"/sangchuMain.do");
+				}
+			} else { // 이메일 비밀번호 일치 X
+
+				// 로그인 시도 횟수 +1
+				int tryLogin = memVO.getU_try() + 1;
+				memVO.setU_try(tryLogin);
+				
+				//update
+
+				int currentTry = memVO.getU_try();
+				
+				String currentTryStr = String.valueOf(currentTry);
+
+				System.out.println("현재 로그인 시도 횟수==> " + currentTry);
+				
+				service.updateLoginTry(inputEmail);
+
+				PrintWriter writer = response.getWriter();
+				writer.println("<script>alert('아이디와 비밀번호가 일치하지 않습니다.'); history.back(); </script>");
+
+				// 5회마다 캡차 api
+				if (currentTry > 5) {
+					request.setAttribute("currentTry", currentTryStr);
+					request.getRequestDispatcher(request.getContextPath() + "/WEB-INF/jsp/login/loginMain.jsp").forward(request, response);
+				}
+			}
+		} else { // 로그인 실패 (존재하지 않는 아이디일 때)
+			PrintWriter writer = response.getWriter();
+			writer.println("<script>alert('존재하지 않는 이메일입니다.'); history.back(); </script>");
+		}
+	}
+}

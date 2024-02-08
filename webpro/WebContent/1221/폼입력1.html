@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+form{
+  border : 1px solid blue;
+  margin  : 30px auto;
+  padding : 5px;
+   width : 30%;
+}
+span{
+  width : 80px;
+  height : 30px;
+  display : inline-block;
+}
+</style>
+</head>
+<body>
+<form action="입력1.jsp"  method="post">
+   <span>아이디</span> 
+   <input type="text" name="id"><br>
+   
+   <span>비밀번호</span> 
+   <input type="password" name="pass"><br>
+   
+   <input type="hidden" name="name" value="홍길동">
+   
+   <br>
+   <input type="submit" value="전송">
+   <input type="reset" value="취소">
+   <input type="button" value="확인" onclick="alert('hello~~')">
+</form>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

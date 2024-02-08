@@ -1,0 +1,934 @@
+<%@page import="sangchu.main.vo.MainProdVO"%>
+<%@page import="sangchu.category.vo.CatLargeVO"%>
+<%@page import="sangchu.category.vo.CatMiddleVO"%>
+<%@page import="java.util.List"%>
+<%@page import="sangchu.main.vo.MemberVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+
+	/*
+		작성자 : 박민주
+		최초작성일 : 2023-08-17
+		관리자 계정으로 로그인 후, selectMenu.jsp 에서 [관리자 페이지로 이동] 클릭 시 로드 되는 jsp 입니다.
+	*/
+
+	String email="";
+
+	MemberVO memVO = (MemberVO)session.getAttribute("memVO");
+	
+	if(memVO != null){
+		email = memVO.getEmail();
+	}
+
+%>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>상추마켓 메인홈페이지</title>
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/header.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/owl.carousel.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- JavaScript Libraries -->
+    <script src="/js/jquery/jquery-3.7.0.min.js"></script>
+    <script src="/js/main/owl.carousel.min.js"></script>
+    <script src="/js/main/bootstrap.bundle.min.js"></script>
+    <script src="/js/main/easing.min.js"></script>
+    <script src="/js/main/owl.carousel.min.js"></script>
+    <script src="/js/main/main.js"></script>
+	
+
+
+	<script>
+	
+	var page = 1;
+	
+		$(function(){
+	
+			<%
+				if(!"".equals(email)){
+			%>
+				userCateProdList();
+			<%
+				}
+			%>
+			
+			//category hover
+			$(document).on("mouseenter", ".navbar-nav .nav-item", function(){
+				$(this).find("div").show();
+			});
+			$(document).on("mouseleave", ".navbar-nav .nav-item", function(){
+				$(this).find("div").hide();
+			});
+			
+			$(document).on("mouseenter", ".navbar-nav .nav-item .dropdown-menu", function(){
+				$(this).closest(".nav-item").find("a.nav-link").attr("style", "background-color: #FFFFFF !important;color: #0abb26 !important;");
+			});
+			$(document).on("mouseleave", ".navbar-nav .nav-item .dropdown-menu", function(){
+				$(this).closest(".nav-item").find("a.nav-link").attr("style", "");
+			});
+			
+			//owl carousel 베너
+			$('.owl-carousel').owlCarousel({
+				items : 1, // 한번에 보여줄 아이템 수
+				loop : true, // 반복여부
+				margin : 35, // 오른쪽 간격
+				autoplay : true, // 자동재생 여부
+				autoplayTimeout : 5000, // 재생간격
+				//nav:true, //네비
+				autoplayHoverPause : true //마우스오버시 멈출지 여부
+			}); 
+			
+			
+			
+			$('#interAddBtr').hover(
+				function(){
+					var btr = $("#interAddBtr");
+					btr.removeClass("btn-circle-add");
+					btr.addClass("btn-circle-add2");
+					btr.html('<i>더보기</i>');
+					
+				},
+				function(){
+					var btr = $("#interAddBtr");
+					btr.addClass("btn-circle-add");
+					btr.removeClass("btn-circle-add2");
+					btr.html('<i class="fa fa-plus"></i>');
+					
+				}
+			) 
+	
+			//관심상품카테고리 변경
+			$('#save').on('click', function(){
+				
+				$.ajax({
+					url : "/saveInterest.do",
+					type : 'post',
+					data : {
+						"email" : "<%=email%>",
+						"c_middlecat" : $('#interNo0').val()
+										+","+$('#interNo1').val()
+										+","+$('#interNo2').val()
+										+","+$('#interNo3').val()
+										+","+$('#interNo4').val()
+					},
+					dataType : 'json',
+					success : function(res){
+						if(res.sw =="성공"){
+							alert("관심카테고리가 변경되었습니다.")
+							location.reload();
+							
+						}else{
+							alert("변경실패");
+						}
+					},
+					error : function(xhr){
+						alert("상태 : "+xhr.status);
+					}
+				})
+			})
+		});
+		
+		
+		//플러스버튼 누르면 상품칸 줄 하나더 생기는 기능
+		$(document).on('click', '#interAddBtr', function() {
+			userCateProdList();
+		});
+		
+		
+		//카테고리 변경 모달창
+		$(document).on('click', '#catebtr', function(){
+			var modal = $("#modalContainer");
+			modal.removeClass("hidden");
+		});
+		$(document).on('click', '#modalCloseButton', function(){
+			var modal = $("#modalContainer");
+			modal.addClass("hidden");
+		});
+		
+		//인기상품 찜추가
+		function jjimClick(t_no , t_this){
+			
+			//찜이 되어있는 상태
+			if($(t_this).hasClass("addJJim")){
+				
+				$.ajax({
+					url : "/deleteJJim.do",
+					type : 'post',
+					data : {
+						"email" : "<%=email%>",
+						"t_no" 	: t_no
+				},
+					dataType : 'json',
+					success : function(res){
+						
+						if(res.sw == "성공"){
+							alert("찜을 삭제했습니다.");
+							var btr = $(t_this);
+							btr.removeClass("addJJim");
+							btr.blur();
+						}
+					},
+					error : function(xhr){
+						alert("상태 : "+xhr.status);
+					}
+				})
+				
+			}else{
+				
+				//찜이 안되어있는 상태
+				$.ajax({
+					url : "/insertJJim.do",
+					type : 'post',
+					data : {
+						"email" : "<%=email%>",
+						"t_no" 	: t_no
+					},
+					dataType : 'json',
+					success : function(res){
+						if(res.sw == "성공"){
+							alert("찜을 추가했습니다.");
+							var btr = $(t_this);
+							btr.addClass("addJJim");
+							btr.blur();
+						}else{
+							alert("로그인 후 이용가능합니다.");
+						}
+					},
+					error : function(xhr){
+						alert("상태 : "+xhr.status);
+					}
+				})
+			}
+		}
+	
+		//회원이 설정한 관심카테고리상품을 불러오는 메서드
+		
+		function userCateProdList(){
+			
+			$.ajax({
+				
+
+				url : "/userCateProd.do",
+				type : 'get',
+				data : {
+					email : "<%=email%>",
+					page : page
+				},
+				dataType :'json',
+				success : function(res){
+					code = "";
+					$.each(res , function(i,v){
+						
+						if(i<4){
+							code +='\
+								<div class="col-lg-3 col-md-4 col-sm-6 pb-1 ">\
+					                <div class="product-item bg-light mb-4 ">\
+					                    <div class="product-img position-relative overflow-hidden">\
+					                        <img class="img-fluid w-100" src="/images/img/배경3.jpg" alt="">\
+					                        <div class="product-action">\
+					                        <a class="btn btn-outline-dark btn-square '+("Y" == v.jjim ? 'addJJim' : '' )+'" onclick="jjimClick(\''+(v.t_no)+'\', this)" href="#none"><i class="far fa-heart"></i></a>\
+				                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-comment"></i></a>\
+				                            <a class="btn btn-outline-dark btn-square" href="/prodDetailView.do?id='+v.t_no+'"><i class="fa fa-search"></i></a>\
+					                        </div>\
+					                    </div>\
+					                    <div class="text-center py-4">\
+					                        <a class="h6 text-decoration-none text-truncate" href="">'+v.tb_title+'</a>\
+					                        <div class="d-flex align-items-center justify-content-center mt-2">\
+					                            <h5>'+v.tb_price+'</h5><h6 class="text-muted ml-2">'+(v.tb_offer == '0' ? '<span>네고가능</span>' : '<span style="color:red;">네고불가</span>')+'</h6>\
+					                        </div>\
+					                        <div class="d-flex align-items-center justify-content-center mb-1">\
+				                            	<small>조회수('+v.tb_cnt+')</small>\
+				                      		</div>\
+				                            <small class="text-body">'+v.t_date+'</small>\
+					                    </div>\
+					                </div>\
+					            </div>\
+							';
+						}
+					})
+					
+					$('#userCate').append(code);
+					page++;
+				},
+				error : function(xhr){
+				}
+			})
+		}
+
+	</script>
+
+</head>
+
+<body style="background: #ffffff">
+    <!-- 헤드 시작 -->
+
+
+<%    
+	if(memVO == null){  
+
+%> 
+    
+    <div class="topDiv">
+        <div class="buttonToLogin">
+            <a href="<%=request.getContextPath()%>/loginMain.do">로그인 / 회원가입</a>
+        </div>
+    </div>
+<%
+	}else{
+		if(memVO.getA_code().equals("0")){
+		%>	
+			<div class="topDiv">
+       			 <div class="buttonToLogin">
+          		  <a href="<%=request.getContextPath()%>/goToAdminMode.do">관리자페이지 </a>　/　
+          		  <a href="<%=request.getContextPath()%>/logtout.do">로그아웃</a>
+      		     </div>
+  			 </div>
+		<%	
+		}else{
+			%> 
+			<div class="topDiv">
+	        <div class="buttonToLogin">
+	            <a href="<%=request.getContextPath()%>/mypageMain.do"><%=memVO.getU_nick() %> 님 환영합니다</a>　/　
+	            <a href="<%=request.getContextPath()%>/logtout.do">로그아웃</a>
+	        </div>
+	    </div>
+		<%	
+		}
+	}
+	%>   
+ 
+    <div id="header">
+        <a class=logoSection href="main.html">
+            <img src="/images/Logo.png" class=logoImg width="40" height="40" alt="상추마켓로고">
+            <p class="font" >상추마켓</p>
+        </a>
+
+        <div class="searchBoxSection">
+            <!-- 검색해서 동기방식 jsp로 이동 -->
+            <form action="#" class="search" method="get">
+                <input class="searchBoxInput" type="text" placeholder="상품명, 지역명 입력" maxlength="40">
+                <input type="image" class="searchButtonImage" src="/images/search.png">
+            </form>
+        </div>
+
+<% 
+	if(memVO == null){  //회원로그인이 안되어있을때
+%>
+        <div class="mypageNZzim">
+            <div class="mypageNZzim_img">
+
+                <a href="<%=request.getContextPath() %>/loginMain.do">
+                    <img src="/images/Main_Header_MyPage.png" alt="마이페이지">
+                </a>
+                <a href="<%=request.getContextPath() %>/loginMain.do">
+                    <img src="/images/Main_Header_Heart.png" alt="찜">
+                </a>
+            </div>
+        </div>
+    </div>
+<% 
+	}else{ //회원로그인이 되어있을때
+%>    
+    <div class="mypageNZzim">
+            <div class="mypageNZzim_img">
+
+                <a href="<%=request.getContextPath() %>/mypageMain.do">
+                    <img src="/images/Main_Header_MyPage.png" alt="마이페이지">
+                </a>
+                <a href="mypage.html">
+                    <img src="/images/Main_Header_Heart.png" alt="찜">
+                </a>
+                
+            </div>
+        </div>
+    </div>
+<% 
+	}
+%>     
+
+    
+    <br>
+
+    <!-- 헤드 끝 -->
+
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-light">
+        <div class="row px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a class="btn d-flex align-items-center justify-content-between bg-sangchu w-100" data-toggle="collapse" href="#" style="height: 65px; padding: 0 30px;">
+                    <h6 class="text-light m-0"><i class="fa fa-bars mr-2"></i>전체 카테고리</h6>
+                </a>
+                <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light " id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999; display:inherit">
+                    <div class="navbar-nav w-100" id="categoryLarge">
+<%
+//카테고리 부르는 jsp
+	List<CatMiddleVO> miList = (List<CatMiddleVO>)request.getAttribute("miResult");
+	List<CatLargeVO> laList = (List<CatLargeVO>)request.getAttribute("laResult");
+	for(int i=0; i<laList.size(); i++){
+		CatLargeVO vo = laList.get(i);
+%>
+						<div class="nav-item dropdown dropright">
+                            <a href="/tBoardList.do?id=<%=vo.getC_largecat()%>" class="nav-link dropdown-toggle bg-sangchu-lightgreen bg-sangchu-light" data-toggle="dropdown"><%=vo.getC_name() %> <i class="fa fa-angle-right float-right mt-1"></i></a>
+<%
+		int cnt = 0;
+		for(int j=0; j<miList.size(); j++){
+			CatMiddleVO mvo = miList.get(j);
+			if( mvo.getC_largecat().equals(vo.getC_largecat()) && cnt == 0 ){
+%>
+								<div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
+<%
+				cnt++;
+			}
+			if( mvo.getC_largecat().equals(vo.getC_largecat())){
+%>						
+									<a href="/tBoardList.do?id=<%=mvo.getC_middlecat()%>" class="dropdown-item"><%=mvo.getC_name() %></a>
+<%
+			}
+			if(j == miList.size()-1 && cnt > 0){
+%>
+                            	</div>
+<%
+			}
+		}
+%>
+						</div>
+<%
+	}
+%>
+					</div>
+				</nav>
+            </div>
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-light navbar-dark py-3 py-lg-0 px-0">
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            <a href="#" class="nav-item nav-link">거래후기</a>
+                            <a href="#" class="nav-item nav-link">우리동네 이모저모</a>
+                            <a href="#" class="nav-item nav-link">익명게시판</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" >고객센터 <i class="fa fa-angle-down"></i></a>
+                                <div class="dropdown-menu bg-sangchu1 rounded-0 border-0 m-0">
+                                    <a href="/qnaBoard.do" class="dropdown-item" >1:1문의하기</a>
+                                    <a href="checkout.html" class="dropdown-item" >자주묻는질문</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+
+
+    <!-- Carousel Start -->
+    <div class="container-fluid mb-3">
+        <div class="row px-xl-5">
+        	<div class="col-lg-3 d-none d-lg-block">
+            </div>
+            <div class="col-lg-9" id="carousel">
+		        <div class="owl-carousel owl-theme owl-loaded">
+					<div class="owl-item">
+						<a href="#" class=""><img src="/images/banner1.png"></a>
+					</div>
+					<div class="owl-item">
+						<a href="#" class=""><img src="/images/banner2.png"></a>
+					</div>
+					<!-- <div class="owl-item">
+						<a href="#" class=""><img src="/img/carousel-3.jpg"></a>
+					</div> -->
+				</div>
+            </div>
+		</div>
+	</div>	
+    <!-- Carousel End -->
+    
+    <br>
+    
+    
+   <!-- 인기상품 -->
+    <div class="container-fluid pt-5 pb-3">
+        <h2 class="section-title position-relative text-uppercase-main mx-xl-5 mb-4"><span class="bg-secondary pr-3">인기상품</span></h2><br>
+        <div class="row px-xl-5 ">
+<%
+//인기상품 부르는 리스트
+			List<MainProdVO> hotList = (List<MainProdVO>)request.getAttribute("hotList");
+		
+			
+			for(int i=0; i<hotList.size(); i++){
+				MainProdVO vo = hotList.get(i);
+		
+			if(i<4){
+%>			
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1 " id="hotitem">
+	            <div class="product-item bg-light mb-4">
+	            	<div class="product-img position-relative overflow-hidden">
+	                    <img class="img-fluid w-100" src="/images/img/product-1.jpg" alt="">
+	                    <div class="product-action">
+	                        <a class="btn btn-outline-dark btn-square <%= "Y".equals(vo.getJjim()) ? "addJJim" : "" %>" onclick="jjimClick('<%=vo.getT_no()%>', this)" href="#none"><i class="far fa-heart"></i></a>
+	                        <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-comment"></i></a>
+	                        <a class="btn btn-outline-dark btn-square" href="/prodDetailView.do?id=<%=vo.getT_no()%>"><i class="fa fa-search"></i></a>
+	                    </div>
+	                </div>
+	                <div class="text-center py-4">
+	                    <a class="h6 text-decoration-none text-truncate" href=""><%=vo.getTb_title()%></a>
+	                    <div class="d-flex align-items-center justify-content-center mt-2">
+	                        <h5><%=vo.getTb_price()%></h5><h6 class="text-muted ml-2"><%= "0".equals(vo.getTb_offer()) ? "네고가능" : "<span style='color:red;'>네고불가</span>" %></h6>
+	                    </div>
+	                    <div class="d-flex align-items-center justify-content-center mb-1">
+	                        <small>조회수(<%=vo.getTb_cnt()%>)</small>
+	                    </div>
+	                        <small class="text-body"><%=vo.getT_date()%></small>
+	                </div>
+	            </div>
+        	</div>
+<%
+		}
+	}
+%>
+        </div>
+    </div>
+    <!-- 인기상품 End -->
+    
+    
+    
+    
+<%
+	if(memVO != null){
+%>
+	<!-- 관심카테고리 -->
+    <div class="container-fluid pt-5 pb-3">
+        <h2 class="section-title position-relative text-uppercase-main mx-xl-5 mb-4"><span class="bg-secondary pr-3"><%=memVO.getU_nick() %>님의 관심 상품</span></h2><br>
+        <a href="#" class="btn btn-primary catebtr" id="catebtr">변경</a>
+        <div class="row px-xl-5-user" id="userCate"> 
+            <!-- <div class="col-lg-3 col-md-4 col-sm-6 pb-1 ">
+                <div class="product-item bg-light mb-4 ">
+                    <div class="product-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="/images/img/배경3.jpg" alt="">
+                        <div class="product-action">
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate" href="">상품이름</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <h5>12,000원</h5><h6 class="text-muted ml-2"><del>네고</del></h6>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small>등록일</small>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <!-- 관심카테고리 End -->  
+    
+    
+    <!--관심카테고리추가기능 -->
+    <div>
+    	<button class="btn btn-primary btn-plus btn-circle-add" id="interAddBtr">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+    <!-- 관심카페고리추가 기능 END -->
+    <br><br>
+   
+    
+ <%
+	}
+ %>   
+
+  	<br><br>
+  	
+  	<!--작은베너 -->
+    <div class="container-fluid pt-5 pb-3">
+        <div class="row px-xl-5">
+            <div class="col-md-6">
+                <div class="product-offer mb-30" style="height: 150px;">
+                    <img class="img-fluid" src="/images/bannermap.png" alt="">
+                    <div class="offer-text">
+                        <h6 class="text-white text-uppercase-main">위치설정</h6>
+                        <h3 class="text-white mb-3">상냥한이웃을 만나기위한</h3>
+                        <a href="https://www.youtube.com/watch?v=1QYBiNRu1ok" class="btn btn-primary">우리동네설정하기</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="product-offer mb-30" style="height: 150px;">
+                    <img class="img-fluid" src="/images/bannersafe.png" alt="">
+                    <div class="offer-text">
+                        <h6 class="text-white text-uppercase-main">안심귀가</h6>
+                        <h3 class="text-white mb-3">더 안전한 직거래를 위한</h3>
+                        <a href="https://www.youtube.com/shorts/QWpbLF1pYHA" class="btn btn-primary">안심귀가 서비스신청</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 작은베너 -->
+    <br>
+  	
+    <!-- 최근 등록된 상품-->
+    <div class="container-fluid pt-5">
+        <h2 class="section-title position-relative text-uppercase-main mx-xl-5 mb-4"><span class="bg-secondary pr-3">최근 등록된 상품</span></h2><br>
+        <div class="row px-xl-5 pb-3" id="recentlist">
+        
+<%
+
+//최근 등록된 상품 불러오는거
+	List<MainProdVO> recentList = (List<MainProdVO>)request.getAttribute("recentList");
+
+	if(recentList.size() == 0){
+		return;
+	}
+	for(int i=0; i<recentList.size(); i++){	
+		MainProdVO vo = recentList.get(i);
+		
+		if(i<12){
+%>				
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <a class="text-decoration-none" href="/prodDetailView.do?id=<%=vo.getT_no()%>">
+                    <div class="cat-item d-flex align-items-center mb-4">
+                        <div class="overflow-hidden" style="width: 100px; height: 100px;">
+                            <img class="img-fluid" src="/images/img/cat-1.jpg" alt="">
+                        </div>
+                        <div class="flex-fill pl-3">
+                            <h6 class="whitehover"><%= vo.getTb_title() %></h6>
+                            <small class="text-body"><%= vo.getTb_price() %> 원</small>
+                            <br>
+                            <small class="text-body"><%= vo.getT_date() %></small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+<%		
+		}else{
+			break;
+		}
+	}
+%>        
+        </div>
+    </div>
+    <!-- 실시간 등록상품 End -->
+    
+	
+	<!--최근본상품-->
+	
+	<div class="recently-viewed">
+    	<h8 style="black">최근 본 상품</h8>
+    	<hr>
+	    <ul class="product-list">
+<%
+//최근본 상품 불러오기
+			List<MainProdVO> viewList = (List<MainProdVO>)request.getAttribute("viewList");
+		
+			if(viewList == null || viewList.size() == 0){		
+%>										
+				<li ><a href="#"><img src="/images/no-image.png" class="recentprod"></a></li>
+				<li ><a href="#"><img src="/images/no-image.png" class="recentprod"></a></li>
+				<li ><a href="#"><img src="/images/no-image.png" class="recentprod"></a></li>
+			
+<% 								
+			
+			
+			}else{
+				for(int i=0; i<viewList.size(); i++){
+					if(memVO == null){
+						//빈이미지 출력
+%>										
+						<li ><a href="#"><img src="/images/no-image.png" class="recentprod"></a></li>
+						<li ><a href="#"><img src="/images/no-image.png" class="recentprod"></a></li>
+						<li ><a href="#"><img src="/images/no-image.png" class="recentprod"></a></li>
+					
+<% 				
+					}else{
+						MainProdVO vo = viewList.get(i);
+%>			    
+					        <!-- 최근 본 상품들이 여기에 추가될 것입니다 -->
+					        <li ><a href="#"><img title="<%=vo.getTb_title() %>" src="/productImageView.do?src=<%=vo.getT_no() %>" class="recentprod"></a></li>
+<% 
+					}
+				}
+			}
+%>
+		</ul>
+	</div>
+	
+	<!--최근본상품 끝  -->
+	
+	
+	<!--관심카테고리 변경 모달창-->
+	<div id="modalContainer" class="hidden">
+	  <div id="modalContent"  >
+	    <p>관심카테고리 설정 ( 최대 5개 설정가능 )</p>
+	    <hr>
+<% 
+		for(int i=0; i<5 ; i++){
+%>			
+			
+		    <select id="interNo<%=i%>" class="custom-select" style="margin-bottom: 10px;">
+		    	<option value="">(관심카테고리 선택)</option>
+<% 
+			for(int j=0; j<miList.size(); j++){
+				CatMiddleVO mvo = miList.get(j);
+%>				
+				<option value="<%=mvo.getC_middlecat() %>"><%=mvo.getC_name() %></option>
+<% 			
+			}	
+%>
+        </select>
+<%         
+		}
+%>        
+
+	   <div style="text-align: center">
+		    <a href="#" class="btn btn-primary modal-mg"  id="save">설정</a>
+		    <a href="#" class="btn btn-primary modal-mg modal-red"  id="modalCloseButton">닫기</a>
+		    <!-- <button id="modalCloseButton">닫기</button> -->
+	    </div>
+	  </div>
+	</div>
+  	
+    
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    
+ 	<!--푸터시작-->
+ 	<div class="container-fluid bg-dark text-secondary mt-5 pt-5">
+        <div class="row px-xl-5 pt-5">
+            <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+                <div class="title"><img src="../../images/Logo.png" alt="로고.png" class="logo" style="height: 30px;">상추마켓</div><br>
+                <p class="mb-4">상호 : 상추마켓 | 대표자명 : 김보영 |<br> </p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>대전광역시
+                        중구 계룡로 846</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>kdy@ddit.com</p>
+                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+010-1234-5678 </p>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="col-md-4 mb-5">
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>마켓소개</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>안심귀가서비스란?</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>고객센터</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>메인페이지</a>
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>마이페이지</a>
+                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>커뮤니티</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>이용약관</a>
+                            <a class="text-secondary" href="#"><i class="fa fa-angle-right mr-2"></i>개인정보처리방침</a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+                        <div class="d-flex">
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-square" href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
+            <div class="col-md-6 px-xl-0">
+                <p class="mb-md-0 text-center text-md-left text-secondary">
+                    © <a class="text-primary" href="#">copyright</a>.상추마켓
+                </p>
+            </div>
+            <div class="col-md-6 px-xl-0 text-center text-md-right">
+                <img class="img-fluid" src="img/payments.png" alt="">
+            </div>
+        </div>
+    </div>
+ 	
+ 	<!-- 푸터 끝 -->
+ 	
+</body>
+
+</html>
+
+
+
+
+<!--미사용-->
+
+		<!-- //카테고리를 출력하는 메서드
+			function categoryList(){
+			
+			$.ajax({
+				url : "/categoryList.do",
+				type : 'get',
+				dataType : 'json',
+				success : function(res){
+					code ="";
+					$.each(res, function(i,v){
+						
+						code += '\
+							<div class="nav-item dropdown dropright">\
+	                            <a href="#" class="nav-link dropdown-toggle bg-sangchu-lightgreen bg-sangchu-light" data-toggle="dropdown">'+v.c_name+' <i class="fa fa-angle-right float-right mt-1"></i></a>\
+						';
+						
+						if(v.miList.length != 0){
+							code += '<div class="dropdown-menu position-absolute rounded-0 border-0 m-0">';
+							$.each(v.miList, function(j,mi){
+								code += '<a href="" class="dropdown-item">'+mi.c_name+'</a>';
+							});
+                            code += '</div>';
+						}
+                        code += `
+	                        </div>
+						`;	
+					})
+					
+					$('#categoryLarge').html(code);
+				},
+				error : function(xhr){
+				}
+			})
+		}	  -->
+
+	
+		<%-- //최근상품 불러오기 메서드
+		function recentProdList(){
+			
+			$.ajax({
+				
+				url : "/recentProd.do",
+				type : 'get',
+				dataType :'json',
+				success : function(res){
+					code ="";
+					$.each(res , function(i,v){
+						
+						if(i<10){
+							code = '\
+								<div class="col-lg-3 col-md-4 col-sm-6 pb-1">\
+				                <a class="text-decoration-none" href="">\
+				                    <div class="cat-item d-flex align-items-center mb-4">\
+				                        <div class="overflow-hidden" style="width: 100px; height: 100px;">\
+				                            <img class="img-fluid" src="<%=request.getContextPath()%>/productImageView.do?src='+v.t_no+'" alt="">\
+				                        </div>\
+				                        <div class="flex-fill pl-3">\
+				                            <h6 class="whitehover">'+ v.tb_title+'</h6>\
+				                            <small class="text-body">'+v.t_date+'</small>\
+				                        </div>\
+				                    </div>\
+				                </a>\
+				            </div>\
+							';
+						}
+					})
+					
+					$('#recentlist').html(code);
+					
+					
+				},
+				error : function(xhr){
+					
+				}
+			})
+		
+		}  
+		
+		
+		//인기상품을 출력하는 메소드
+		function hotItemList(){
+			
+			
+			$.ajax({
+				
+				url : "/hotItem.do",
+				type : 'get',
+				dataType :'json',
+				success : function(res){
+					code ="";
+					$.each(res , function(i,v){
+						
+						if(i<4){
+							code += '\
+							<div class="col-lg-3 col-md-4 col-sm-6 pb-1">\
+								<div class="product-item bg-light mb-4">\
+									<div class="product-img position-relative overflow-hidden">\
+				                        <img class="img-fluid w-100" src="<%=request.getContextPath()%>/productImageView.do?src='+v.t_no+'" alt="">\
+				                        <div class="product-action">\
+				                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>\
+				                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-comment"></i></a>\
+				                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>\
+				                        </div>\
+				                    </div>\
+				                    <div class="text-center py-4">\
+				                        <a class="h6 text-decoration-none text-truncate" href="">'+ v.tb_title +'</a>\
+				                        <div class="d-flex align-items-center justify-content-center mt-2">\
+				                            <h5>'+v.tb_price+'</h5><h6 class="text-muted ml-2">'+(v.tb_offer == '0' ? '<span>네고가능</span>' : '<span style="color:red;">네고불가</span>')+'</h6>\
+				                        </div>\
+				                        <div class="d-flex align-items-center justify-content-center mb-1">\
+				                            <small>조회수('+v.tb_cnt+')</small>\
+				                        </div>\
+				                            <small class="text-body">'+v.t_date+'</small>\
+				                    </div>\
+			                    </div>\
+		                    </div>\
+							';
+						}
+					})
+					
+					$('#hotItem').html(code);
+					
+				},
+				error : function(xhr){
+					
+				}
+			})
+		}  --%>
+		
+		
+		<!-- <div class="nav-item dropdown dropright">
+                            <a href="#" class="nav-link dropdown-toggle bg-sangchu-lightgreen bg-sangchu-light" data-toggle="dropdown">의류 <i class="fa fa-angle-right float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
+                                <a href="" class="dropdown-item">남성의류</a>
+                                <a href="" class="dropdown-item">여성의류</a>
+                                <a href="" class="dropdown-item">아동의류</a>
+                            </div>
+                        </div>
+                       
+                         <div class="nav-item dropdown dropright">
+                            <a href="#" class="nav-link dropdown-toggle bg-sangchu-lightgreen" data-toggle="dropdown" style="border-bottom: 0px;">　</a>
+                            
+                        </div> -->
+		
+
+
+

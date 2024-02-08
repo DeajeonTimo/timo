@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+random = Math.floor(Math.random()*3);
+com="";
+if(random ==0){
+	com="가위";
+}else if(random == 1){
+	com ="바위";
+}else{
+	com ="보";
+}
+
+proc1 = () =>{
+	
+	result = "";
+	
+	user = prompt("가위바위보 입력");
+	
+	if(com == user){
+		result = "비겼습니다."
+	}else if(com =="가위" && user =="바위" || com =="바위" && user =="보" || com =="보" && user =="가위" ) {
+		result = "당신이 이겼습니다."
+	}else{
+		result = "당신이 졌습니다."
+	}
+	
+	result += "   컴퓨터 : " + com + " 당신 : " + user;
+	
+	document.getElementById('result1').innerHTML = result;
+}
+</script>
+</head>
+<body>
+<div class="box">
+<h4>가위바위보</h4>
+<input type ="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<style>
+#result1{
+width : 500px;
+height : 300px;
+}
+#result2{
+width : 500px;
+height : 300px;
+}
+</style>
+<script>
+
+window.onload = () =>{
+	res1= document.getElementById('result1');
+	res2= document.getElementById('result2');
+}
+
+
+
+proc1 = () =>{
+	//0~255사이의 랜덤 발생
+	
+	cr= Math.floor(Math.random()*256);
+	cg= Math.floor(Math.random()*256);
+	cb= Math.floor(Math.random()*256);
+	
+	//setTimeout
+	
+	setTimeout(function(){
+		//res1= document.getElementById('result1');
+		//res1.style.backgroundColor = `rgb(${cr},${cg},${cb})`;//"rbg("+cr+","+cg+","+cb+")";
+		//res1.style.backgroundColor = "#faf1d7";
+		
+		cr16 = cr.toString(16);
+		cg16 = cr.toString(16);
+		cb16 = cr.toString(16);
+		//res1.style.backgroundColor = "#" + cr16+cg16+cb16;
+		res1.style.backgroundColor = `#${cr16}${cg16}${cb16}`;
+		
+	},1000);
+}
+
+
+/* proc2 = (but) =>{
+		//but : 시작버튼 this파라미터를 매개변수로 받은것.
+		
+}
+ */
+
+
+
+proc2 = (but)=>{
+	
+	//this : 시작버튼
+	//함수 호출시 this 파라미터로 넘긴다
+	
+	gbut = but;
+	
+	but.style.display = "none";
+	//setInterval
+	id=setInterval(function(){
+		
+		cr= Math.floor(Math.random()*256);
+		cg= Math.floor(Math.random()*256);
+		cb= Math.floor(Math.random()*256);
+		
+		cr16 = cr.toString(16);
+		cg16 = cr.toString(16);
+		cb16 = cr.toString(16);
+		//res2.style.backgroundColor = "#" + cr16+cg16+cb16;
+		res2.style.backgroundColor = `#${cr16}${cg16}${cb16}`;
+		
+		
+	},1000)
+}
+
+proc3=()=>{
+	//실행종료
+	clearInterval(id);
+	//시작버튼이 다시 보여지도록 설정
+	gbut.style.display = "inline";
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="시작" onclick="proc2(this)">
+<input type ="button" value="종료" onclick="proc3()">
+<br><br>
+<div id="result2"></div>
+</div>
+
+</body>
+</html>

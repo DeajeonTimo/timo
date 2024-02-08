@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<style>
+#content{
+	display : flex;
+	flex-direction : row;
+	
+}
+
+ .res{
+	flex : 25%;
+	border : 2px dotted gold;
+	box-sizing : border-box;
+}
+.box div .res{
+	border : 2px dotted blue;
+}
+
+</style>
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+function asyFunc(url){
+	return new Promise(function(resolve,reject){
+		const xhr = new XMLHttpRequest();
+		xhr.open("GET",url,true);
+		xhr.onload = ()=> resolve(xhr.responseText);
+		xhr.onerror = () => reject(xhr.statusText);
+		xhr.send();
+	});
+}
+
+
+obarrproc = () =>{
+	asyFunc("obarr.jsp").then(text => {
+		
+		text = JSON.parse(text);
+		
+		code = "";
+		
+		 text.forEach((str,index)=>{
+			 code += `${index} 번째정보 <br>`;
+			 code += `이름 : ${str.name} <br>`;
+			 code += `주소 : ${str.addr} <br>`;
+			 code += `전화번호 : ${str.tel} <br><br>`;
+		 })
+		 
+		 $('#result4').html(code);
+	})
+}
+
+
+
+objproc = () =>{
+	asyFunc("obj.jsp").then(text => {
+		
+		text = JSON.parse(text);
+		
+		 code = `이름 : ${text.name} <br>`;
+		 code += `주소 : ${text.addr} <br>`;
+		 code += `전화번호 : ${text.tel} <br>`;
+		 
+		 $('#result3').html(code);
+	})
+}
+
+
+
+arrproc = () =>{
+	asyFunc("arr.jsp").then(text => {
+		console.log(text);
+		
+		
+		text = JSON.parse(text);
+		 code = "<ol>";
+	   /*for(i=0; i<res.length; i++){
+			 res[i]
+		 } */
+		/*  $.each(res,function(i){
+			 res[i]
+		 }) */
+		 
+		 text.forEach((str)=>{
+			code+= "<li>"+ str+"</li>";
+		 })
+		 
+		 code+= "</ol>";
+		 
+		 $('#result2').html(code);
+		
+		
+	})
+}
+
+
+
+
+textproc = () =>{
+	asyFunc("text.jsp").then(text => {
+		console.log(text);
+		//text =   홍길동/개나리/진달래/무궁화/수선화/라일락
+		vstr = text.split("/");
+		
+		 code = "<ul>";
+		   /*for(i=0; i<res.length; i++){
+				 res[i]
+			 } */
+			/*  $.each(res,function(i){
+				 res[i]
+			 }) */
+			 
+			 vstr.forEach((str,index)=>{
+				code+= "<li>"+ str+"</li>";
+			 })
+			 
+			 code+= "</ul>";
+			 
+			 $('#result1').html(code);
+	})
+}
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="text" onclick="textproc()">
+<input type ="button" value="arr" onclick="arrproc()">
+<input type ="button" value="jsonobj" onclick="objproc()">
+<input type ="button" value="jobarr" onclick="obarrproc()">
+<br><br>
+<div id="content">
+<div id="result1" class="res"></div>
+<div id="result2" class="res"></div>
+<div id="result3" class="res"></div>
+<div id="result4" class="res"></div>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+body{
+min-width :1000px;
+}
+form{
+border : 2px dotted blue;
+width : 450px;
+height : 400px;
+margin : 50px;
+padding : 20px;
+}
+h2{
+display : inline-block;
+margin-left : 50px;
+margin-bottom: -50px;
+padding-top : 30px;
+}
+.c1{
+display : inline-block;
+width : 80px;
+height : 30px;
+margin-right : 50px;
+}
+
+</style>
+</head>
+<body>
+<h2>회원정보입력폼</h2>
+<form action="회원정보.sjp" method="post">
+<label class="c1">아이디</label>
+<input type="text" name="id"/>
+
+<input type="submit" value="중복검사"/><br />
+
+<label class="c1">이름</label>
+<input type="text" name="name"/><br />
+
+<label class="c1">생년월일</label>
+<input type="text" name="bir"/><br />
+
+<label class="c1">비밀번호</label>
+<input type="text" name="pw"/><br />
+
+<label class="c1">비밀번호확인</label>
+<input type="text" name="pwChk"/><br />
+
+<label class="c1">성별</label>
+<input type="radio" name="gen" checked/>여성
+<input type="radio" name="gen"/>남성<br />
+
+<label class="c1">휴대폰 번호</label>
+<input type="text" name="tle"/><br />
+
+<label class="c1">이메일</label>
+<input type="text" name="email"/><br />
+
+<label class="c1">우편번호</label>
+<input type="text" name="zip"/>
+<input type="submit" value="우편번호검색" /><br />
+
+<label class="c1">주소</label>
+<input type="text" name="addr1"/><br />
+
+<label class="c1">상세주소</label>
+<input type="text" name="addr2"/><br />
+
+<br />
+<input type="submit" value="제출" />
+<input type="reset" value="초기화" />
+</form>
+
+</body>
+</html>

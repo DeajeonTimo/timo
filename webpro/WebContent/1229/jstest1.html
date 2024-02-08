@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+div{
+  border : 1px dotted orange;
+  padding : 10px;
+  
+}
+</style>
+<script>
+
+function ``
+	//입력받은 id의 값을 가져온다  - id=id인 요소에 접근 
+	let  vid = document.getElementById('id');
+	/* let  vid = document.querySelector('#id');
+	 */
+	
+	 var  idvalue = vid.value;
+	
+	//처리 한후 처리 결과를 출력한다 
+	var str = "";
+	str += "당신의 입력한 id는 " + idvalue + "입니다 ";
+	
+	//document.write(str);
+	//console.log(str);
+	//alert(str);
+	
+	//출력 장소 접근 
+	vres = document.querySelector('#result');
+	
+	vres.innerText = str;
+}
+</script>
+</head>
+<body>
+<input type="text" id="id" name="id" placeholder="id입력"><br>
+<input type="button" value="확인" onclick="fprint()">
+
+<br><br>
+<div id="result"></div>
+</body>
+</html>

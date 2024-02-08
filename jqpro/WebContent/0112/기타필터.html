@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	$('#hid').on('click',()=>{
+		str="";
+		$('#result1 *:hidden').each(function(){
+			
+			str += $(this).text() + "<br>";
+			
+		})
+		
+		$('.res1').html(str);
+	})
+	
+	$('#visi').on('click',()=>{
+		str="";
+		$('#result1 *:visible').each(function(x,y){
+			str += $(y).text() + "<br>";
+		})
+		
+		$('.res2').html(str);
+		
+	})
+	
+		$('#fhid').on('click',()=>{
+		str="";
+			$('#testForm *:hidden').each(function(i,v){
+				
+				vtag = v.tagName ;
+				//alert(vtag);
+				
+				//$(this).attr('name')
+				//$(this).val();
+				//$(this).text()
+				
+				if(vtag=="INPUT"){
+					str+= vtag + "=> " + $(this).attr('name')+" : ";
+					str+= $(this).val()+"<br>";
+				}else{
+					str+= vtag + "=> "+$(this).text()+"<br>";
+				}
+			})
+			$('.fres1').html(str);
+		})
+	
+		$('#fvisi').on('click',()=>{
+		str="";
+			$('#testForm *:visible').each(function(i,v){
+				
+				vtag = v.tagName ;
+//				alert(vtag);
+				
+				
+				if(vtag=="INPUT"){
+					str+= vtag + "=> " + $(this).attr('name')+" : ";
+					str+= $(this).val()+"<br>";
+				}else if(vtag !="br"){
+					
+				}else{
+					str+= vtag + "=> "+$(this).text()+"<br>";
+				}
+				
+				$('.fres2').html(str);
+				//$(this).attr('name')
+				//$(this).val();
+				//$(this).text()
+			})
+		})
+	
+	
+})
+
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type="button" value="hidden" id="hid">
+<input type ="button" value="visible" id="visi">
+<br><br>
+<div id="result1">
+  <p> 보이는 문단</p>
+  <p style="visibility:hidden;">숨겨진 문단</p>
+  <p style="display:none;"> 자리를 차지 하지 못한 문단 </p>
+  <p style="opacity:0;"> 투명한 문단</p>
+	
+
+</div>
+<div class="res1"></div>
+<div class="res2"></div>
+</div>
+
+<div class="box">
+<h4></h4>
+<input type="button" value="hidden" id="fhid">
+<input type ="button" value="visible" id="fvisi">
+<br><br>
+<div id="result2">
+	<form id="testForm"> 
+		<input type="hidden" name="userAge" value="33">
+		<input type="hidden" name="userCity" value="대전">
+		I D : 
+		<input type="text" name="userID" value="hong">  
+		<span style="display:none">ID가 중복됩니다. </span> <br>  
+		이름 : 
+		<input type="text" name="userName" value="홍길동">   
+		<span style="visibility:hidden">이름을 입력하세요</span><br>  
+		성별 : 
+		<input type="radio" name="sung" value="남" checked>남자  
+		<input type="radio" name="sung" value="여">여자  
+	</form>
+
+
+</div>
+<div class="fres1"></div>
+<div class="fres2"></div>
+</div>
+</body>
+</html>

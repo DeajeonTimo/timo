@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 외부 스타일 적용 -->
+<link rel="stylesheet" href="../css/public.css">
+
+<style>
+body *{
+   box-sizing : border-box;
+}
+
+ul, li{
+  border : 1px solid red;
+}
+
+li{
+   border-style :  dotted ;
+   border-color : green;
+   margin : 2px;
+}
+div {
+   border : 3px dashed blue;
+   margin : 10px;
+   padding : 5px;
+   width : 25%;
+   float: left; 
+} 
+#u2{
+  list-style-type:  circle;
+  list-style-position: inside;
+}
+#u3{
+  list-style-image:  url(../images/check.png);
+  height : 110px;
+}
+#u4{
+  list-style-type: square;
+}
+ul.uu{
+  overflow: auto ; /* scroll; */ /* hidden; */
+}
+</style>
+</head>
+<body>
+<pre>
+외부스타일 적용 
+&lt;link rel="stylesheet" href="../css/public.css">
+</pre>
+
+<div>
+<h4>disk</h4>
+<ul id="u1" class="uu">
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JAVASCRIPT</li>
+  <li>JQUERY</li>
+</ul>
+</div>
+
+<div>
+<h4>circle</h4>
+<ul id="u2" class="uu">
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JAVASCRIPT</li>
+  <li>JQUERY</li>
+</ul>
+</div>
+
+<div>
+<h4>image</h4>
+<ul id="u3" class="uu">
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JAVASCRIPT</li>
+  <li>JQUERY</li>
+</ul>
+</div>
+
+
+<div>
+<h4>square</h4>
+<ul id="u4" class="uu">
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JAVASCRIPT</li>
+  <li>JQUERY</li>
+</ul>
+</div>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

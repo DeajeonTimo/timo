@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+//객체 선언 
+rect = {
+	garo : 10,
+	sero : 13,
+	getArea() { 
+		return this.garo * this.sero;
+	},
+	getCircum() { 
+		return (this.garo + this.sero ) * 2;
+	}
+	/* getArea : function(){
+		return this.garo * this.sero;
+	},
+	getCircum : function(){
+		return (this.garo + this.sero ) * 2;
+	} */
+}
+
+printObj = (out) => {
+	
+	//출력내용 
+	str = `이름 ${rect.name} <br>`
+	str += `가로 : ${rect.garo} <br>`;
+	str += `세로 : ${rect.sero} <br>`;
+	str += `면적 : ${rect.getArea()} <br>` ;
+	str += `둘레 : ${rect.getCircum()} <br> `
+	
+	/* vgaro = rect.getArea();
+	vsero = rect.getCircum();
+	str += `면적 : ${vgaro} <br>` ;
+	str += `둘레 : ${vsero} <br>` ; */
+	
+	document.getElementById(out).innerHTML =str;
+}
+
+proc1 = () =>{
+	
+	rect.name = "네모";
+	printObj('result1');
+}
+
+
+proc2 = () =>{
+	//가로, 세로 이름 입력  - 입력값을 rect의 속성에 대입 
+	rect.garo = parseInt(prompt('가로 입력'));
+	
+	vsero = parseInt(prompt("세로 입력"));
+	rect.sero = vsero;
+	
+	rect.name = prompt("이름입력");
+	
+	//출력 
+	printObj('result2');
+}
+
+//객체 선언 
+
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4>  </h4>
+<input type="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4>  </h4>
+<input type="button" value="확인" onclick="proc2()">
+<br><br>
+<div id="result2"></div>
+</div>
+
+</body>
+</html>
+
+
+

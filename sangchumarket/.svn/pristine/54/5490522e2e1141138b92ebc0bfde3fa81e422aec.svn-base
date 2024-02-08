@@ -1,0 +1,640 @@
+<%@page import="sangchu.trade.vo.TradeVO"%>
+<%@page import="sangchu.category.vo.CatLargeVO"%>
+<%@page import="sangchu.category.vo.CatMiddleVO"%>
+<%@page import="sangchu.main.vo.MemberVO"%>
+<%@page import="sangchu.main.vo.MainProdVO"%>
+<%@page import="java.io.IOException"%>
+<%@page import="java.io.FileInputStream"%>
+<%@page import="java.io.BufferedOutputStream"%>
+<%@page import="java.io.BufferedInputStream"%>
+<%@page import="java.io.File"%>
+<%@page import="sangchu.tboard.vo.TBoardVO"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%
+	String email = "";
+
+MemberVO memVO = (MemberVO) session.getAttribute("memVO");
+
+if (memVO != null) {
+	email = memVO.getEmail();
+}
+%>
+<!DOCTYPE html>
+<html lang="utf-8">
+
+<head>
+<meta charset="utf-8">
+<title>상품목록페이지</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Free HTML Templates" name="keywords">
+<meta content="Free HTML Templates" name="description">
+
+
+<!-- Font Awesome -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+	rel="stylesheet">
+
+<!-- Libraries Stylesheet -->
+<link href="/css/animate.min.css" rel="stylesheet">
+<link href="/css/owl.carousel.min.css" rel="stylesheet">
+
+<!-- Customized Bootstrap Stylesheet -->
+<link href="/css/style.css" rel="stylesheet">
+<link href="/css/header.css" rel="stylesheet">
+
+</head>
+<script type="text/javascript">
+  //인기상품 찜추가
+	function jjimClick(t_no , t_this){
+		
+		//찜이 되어있는 상태
+		if($(t_this).hasClass("addJJim")){
+			
+			$.ajax({
+				url : "/deleteJJim.do",
+				type : 'post',
+				data : {
+					"email" : "<%=email%>",
+					"t_no" 	: t_no
+			},
+				dataType : 'json',
+				success : function(res){
+					
+					if(res.sw == "성공"){
+						alert("찜을 삭제했습니다.");
+						var btr = $(t_this);
+						btr.removeClass("addJJim");
+						btr.blur();
+					}
+				},
+				error : function(xhr){
+					alert("상태 : "+xhr.status);
+				}
+			})
+			
+		}else{
+			
+			//찜이 안되어있는 상태
+			$.ajax({
+				url : "/insertJJim.do",
+				type : 'post',
+				data : {
+					"email" : "<%=email%>",
+					"t_no" 	: t_no
+				},
+				dataType : 'json',
+				success : function(res){
+					if(res.sw == "성공"){
+						alert("찜을 추가했습니다.");
+						var btr = $(t_this);
+						btr.addClass("addJJim");
+						btr.blur();
+					}else{
+						alert("로그인 후 이용가능합니다.");
+					}
+				},
+				error : function(xhr){
+					alert("상태 : "+xhr.status);
+				}
+			})
+		}
+	}
+    </script>
+
+<body style="background: #FFFFFF">
+
+	<!-- 헤드 시작 -->
+
+
+	<%
+		if (memVO == null) {
+	%>
+
+	<div class="topDiv">
+		<div class="buttonToLogin">
+			<a href="<%=request.getContextPath()%>/loginMain.do">로그인 / 회원가입</a>
+		</div>
+	</div>
+	<%
+		} else {
+	%>
+	<div class="topDiv">
+		<div class="buttonToLogin">
+			<a href="<%=request.getContextPath()%>/mypageMain.do"><%=memVO.getU_nick()%>
+				님 환영합니다</a> / <a href="<%=request.getContextPath()%>/">로그아웃</a>
+		</div>
+	</div>
+	<%
+		}
+	%>
+
+	<div id="header">
+		<a class=logoSection href="main.html"> <img src="/images/Logo.png"
+			class=logoImg width="40" height="40" alt="상추마켓로고">
+			<p class="font">상추마켓</p>
+		</a>
+
+		<div class="searchBoxSection">
+			<!-- 검색해서 동기방식 jsp로 이동 -->
+			<form action="#" class="search" method="get">
+				<input class="searchBoxInput" type="text" placeholder="상품명, 지역명 입력"
+					maxlength="40"> <input type="image"
+					class="searchButtonImage" src="/images/search.png">
+			</form>
+		</div>
+
+		<%
+			if (memVO == null) { //회원로그인이 안되어있을때
+		%>
+		<div class="mypageNZzim">
+			<div class="mypageNZzim_img">
+
+				<a href="<%=request.getContextPath()%>/loginMain.do"> <img
+					src="/images/Main_Header_MyPage.png" alt="마이페이지">
+				</a> <a href="<%=request.getContextPath()%>/loginMain.do"> <img
+					src="/images/Main_Header_Heart.png" alt="찜">
+				</a>
+			</div>
+		</div>
+	</div>
+	<%
+		} else { //회원로그인이 되어있을때
+	%>
+	<div class="mypageNZzim">
+		<div class="mypageNZzim_img">
+
+			<a href="<%=request.getContextPath()%>/mypageMain.do"> <img
+				src="/images/Main_Header_MyPage.png" alt="마이페이지">
+			</a> <a href="mypage.html"> <img src="/images/Main_Header_Heart.png"
+				alt="찜">
+			</a>
+
+		</div>
+	</div>
+	</div>
+	<%
+		}
+	%>
+
+
+	<br>
+
+
+	<!-- 헤드 끝 -->
+
+
+
+
+	<!-- Breadcrumb Start -->
+	<div class="container-fluid">
+		<div class="row px-xl-5">
+			<div class="col-12">
+				<nav class="breadcrumb bg-light mb-30">
+					<a class="breadcrumb-item text-dark" href="#">Home</a> <a
+						class="breadcrumb-item text-dark" href="#">Shop</a> <span
+						class="breadcrumb-item active">Shop List</span>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<!-- Breadcrumb End -->
+
+
+	<!-- Shop Start -->
+	<div class="container-fluid">
+		<!-- <div class="row px-xl-5">
+            Shop Sidebar Start
+            <div class="col-lg-3 col-md-4">
+                Price Start
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by price</span></h5>
+                <div class="bg-light p-4 mb-30">
+                    <form>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" checked id="price-all">
+                            <label class="custom-control-label" for="price-all">All Price</label>
+                            <span class="badge border font-weight-normal">1000</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="price-1">
+                            <label class="custom-control-label" for="price-1">$0 - $100</label>
+                            <span class="badge border font-weight-normal">150</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="price-2">
+                            <label class="custom-control-label" for="price-2">$100 - $200</label>
+                            <span class="badge border font-weight-normal">295</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="price-3">
+                            <label class="custom-control-label" for="price-3">$200 - $300</label>
+                            <span class="badge border font-weight-normal">246</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="price-4">
+                            <label class="custom-control-label" for="price-4">$300 - $400</label>
+                            <span class="badge border font-weight-normal">145</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                            <input type="checkbox" class="custom-control-input" id="price-5">
+                            <label class="custom-control-label" for="price-5">$400 - $500</label>
+                            <span class="badge border font-weight-normal">168</span>
+                        </div>
+                    </form>
+                </div>
+                Price End
+                
+                Color Start
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by color</span></h5>
+                <div class="bg-light p-4 mb-30">
+                    <form>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" checked id="color-all">
+                            <label class="custom-control-label" for="price-all">All Color</label>
+                            <span class="badge border font-weight-normal">1000</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="color-1">
+                            <label class="custom-control-label" for="color-1">Black</label>
+                            <span class="badge border font-weight-normal">150</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="color-2">
+                            <label class="custom-control-label" for="color-2">White</label>
+                            <span class="badge border font-weight-normal">295</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="color-3">
+                            <label class="custom-control-label" for="color-3">Red</label>
+                            <span class="badge border font-weight-normal">246</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="color-4">
+                            <label class="custom-control-label" for="color-4">Blue</label>
+                            <span class="badge border font-weight-normal">145</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                            <input type="checkbox" class="custom-control-input" id="color-5">
+                            <label class="custom-control-label" for="color-5">Green</label>
+                            <span class="badge border font-weight-normal">168</span>
+                        </div>
+                    </form>
+                </div>
+                Color End
+
+                Size Start
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by size</span></h5>
+                <div class="bg-light p-4 mb-30">
+                    <form>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" checked id="size-all">
+                            <label class="custom-control-label" for="size-all">All Size</label>
+                            <span class="badge border font-weight-normal">1000</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="size-1">
+                            <label class="custom-control-label" for="size-1">XS</label>
+                            <span class="badge border font-weight-normal">150</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="size-2">
+                            <label class="custom-control-label" for="size-2">S</label>
+                            <span class="badge border font-weight-normal">295</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="size-3">
+                            <label class="custom-control-label" for="size-3">M</label>
+                            <span class="badge border font-weight-normal">246</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input" id="size-4">
+                            <label class="custom-control-label" for="size-4">L</label>
+                            <span class="badge border font-weight-normal">145</span>
+                        </div>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
+                            <input type="checkbox" class="custom-control-input" id="size-5">
+                            <label class="custom-control-label" for="size-5">XL</label>
+                            <span class="badge border font-weight-normal">168</span>
+                        </div>
+                    </form>
+                </div> -->
+		<!-- Size End -->
+		<%
+			List<CatMiddleVO> miList = (List<CatMiddleVO>) request.getAttribute("miResult");
+		List<CatLargeVO> laList = (List<CatLargeVO>) request.getAttribute("laResult");
+		List<TradeVO> tlist = (List<TradeVO>) request.getAttribute("tlist");
+		String mName = (String) request.getAttribute("mName");
+		%>
+		<div class="row px-xl-5">
+			<div class="col-lg-3 col-md-4">
+				<h3 class="section-title text-uppercase mb-3"><%=mName%></h3>
+				<hr>
+				<div class="bg-light p-4 mb-30">
+					<%
+						for (CatLargeVO lvo : laList) {
+					%>
+					<div class="custom-control-label" for="price-all"><%=lvo.getC_name()%></div>
+					<ul>
+						<%
+							for (CatMiddleVO mvo : miList) {
+							if (lvo.getC_largecat().equals(mvo.getC_largecat())) {
+						%>
+						<li class="badge border font-weight-normal"><a href="/tBoardList.do?id=<%=mvo.getC_middlecat()%>"><%=mvo.getC_name()%></a></li>
+						<br>
+						<%
+							}
+						}
+						%>
+					</ul>
+					<%
+						}
+					%>
+				</div>
+			</div>
+			<!-- Shop Sidebar End -->
+
+
+			<!-- Shop Product Start -->
+			<div class="col-lg-9 col-md-8">
+				<div class="row pb-3">
+					<div class="col-12 pb-1">
+						<div
+							class="d-flex align-items-center justify-content-between mb-4">
+							<div>
+								<button class="btn btn-sm btn-light">
+									<i class="fa fa-th-large"></i>
+								</button>
+								<button class="btn btn-sm btn-light ml-2">
+									<i class="fa fa-bars"></i>
+								</button>
+							</div>
+							<div class="ml-2">
+								<div class="btn-group">
+									<button type="button"
+										class="btn btn-sm btn-light dropdown-toggle"
+										data-toggle="dropdown">Sorting</button>
+									<div class="dropdown-menu dropdown-menu-right">
+										<a class="dropdown-item" href="#">Latest</a> <a
+											class="dropdown-item" href="#">Popularity</a> <a
+											class="dropdown-item" href="#">Best Rating</a>
+									</div>
+								</div>
+								<div class="btn-group ml-2">
+									<button type="button"
+										class="btn btn-sm btn-light dropdown-toggle"
+										data-toggle="dropdown">Showing</button>
+									<div class="dropdown-menu dropdown-menu-right">
+										<a class="dropdown-item" href="#">10</a> <a
+											class="dropdown-item" href="#">20</a> <a
+											class="dropdown-item" href="#">30</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<%
+						List<TBoardVO> list = (List<TBoardVO>) request.getAttribute("tblist");
+					if (list == null || list.size() == 0) {
+					%>
+					<div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+						<div class="product-item bg-light mb-4">
+							<div class="product-img position-relative overflow-hidden">
+								<img class="img-fluid w-100"
+									src="<%=request.getContextPath()%>/images/img/product-1.jpg"
+									alt="">
+								<div class="product-action">
+									<a class="btn btn-outline-dark btn-square" href=""><i
+										class="far fa-heart"></i></a> <a
+										class="btn btn-outline-dark btn-square" href=""><i
+										class="fa fa-comment"></i></a> <a
+										class="btn btn-outline-dark btn-square" href=""><i
+										class="fa fa-search"></i></a>
+								</div>
+							</div>
+							<div class="text-center py-4">
+								<a class="h6 text-decoration-none text-truncate" href="">못
+									불러와</a>
+								<div
+									class="d-flex align-items-center justify-content-center mt-2">
+									<h5>없어</h5>
+								</div>
+								<div
+									class="d-flex align-items-center justify-content-center mb-1">
+									<small>아 진짜루</small>
+								</div>
+							</div>
+						</div>
+					</div>
+					<%
+						} else {
+					for (int i = 0; i < list.size(); i++) {
+						String tid = list.get(i).getT_no();
+						//                     				List<File> file= list.get(i).getFileList();  //(List<File>)request.getAttribute("imagesList");
+						//                     				if(file!=null|| file.size()!=0){
+						List<MainProdVO> hotList = (List<MainProdVO>) request.getAttribute("hotList");
+						MainProdVO vo = hotList.get(i);
+					%>
+					<div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+						<div class="product-item bg-light mb-4">
+							<div class="product-img position-relative overflow-hidden">
+								<img class="img-fluid w-100"
+									src="<%=request.getContextPath()%>/imageViewMany.do?id=<%=tid%>"
+									alt="">
+								<div class="product-action">
+									<a
+										class="btn btn-outline-dark btn-square <%="Y".equals(vo.getJjim()) ? "addJJim" : ""%>"
+										onclick="jjimClick('<%=list.get(i).getT_no()%>', this)" href="#none"><i
+										class="far fa-heart"></i></a> <a
+										class="btn btn-outline-dark btn-square"
+										data-tradeNo="<%=list.get(i).getT_no()%>"
+										href="#" value="<%=vo.getT_no()%>" onclick="newChatLink(this)"><i
+										class="fa fa-comment"></i></a> <a
+										class="btn btn-outline-dark btn-square"
+										href="<%=request.getContextPath()%>/prodDetailView.do?id=<%=list.get(i).getT_no()%>"><i
+										class="fa fa-search"></i></a>
+								</div>
+							</div>
+							<div class="text-center py-4">
+								<a class="h6 text-decoration-none text-truncate"
+									href="<%=request.getContextPath()%>/prodDetailView.do?id=<%=list.get(i).getT_no()%>"><%=list.get(i).getTb_title()%></a>
+								<div
+									class="d-flex align-items-center justify-content-center mt-2">
+									<h5><%=list.get(i).getTb_price()%>원
+									</h5>
+								</div>
+								<div
+									class="d-flex align-items-center justify-content-center mb-1">
+									<small
+										style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 180px; height: 30px;">
+										<%=list.get(i).getTb_content()%></small>
+								</div>
+							</div>
+						</div>
+					</div>
+					<%
+						}
+					}
+					%>
+                    
+					<!-- <div class="col-12">
+                        <nav>
+                          <ul class="pagination justify-content-center">
+                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                          </ul>
+                          
+                        </nav>
+                    </div> -->
+					<input type="button" value="상품 등록" onclick="prodInsert()">
+				</div>
+			</div>
+			<!-- Shop Product End -->
+		</div>
+	</div>
+	<!-- Shop End -->
+
+	<!-- Back to Top -->
+	<a href="#" class="btn btn-primary back-to-top"><i
+		class="fa fa-angle-double-up"></i></a>
+
+
+	<!-- JavaScript Libraries -->
+	<script src="/js/jquery/jquery-3.7.0.min.js"></script>
+
+	<!-- Template Javascript -->
+	<script src="js/main/main.js"></script>
+
+	<!-- JavaScript Libraries -->
+	<script src="/js/main/bootstrap.bundle.min.js"></script>
+	<script src="/js/main/easing.min.js"></script>
+	<script src="/js/main/owl.carousel.min.js"></script>
+
+	<!-- Contact Javascript File -->
+	<!-- <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script> -->
+	<div class="container-fluid bg-dark text-secondary mt-5 pt-5">
+		<div class="row px-xl-5 pt-5">
+			<div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+				<div class="title">
+					<img src="../../images/Logo.png" alt="로고.png" class="logo"
+						style="height: 30px;">상추마켓
+				</div>
+				<br>
+				<p class="mb-4">
+					상호 : 상추마켓 | 대표자명 : 김보영 |<br>
+				</p>
+				<p class="mb-2">
+					<i class="fa fa-map-marker-alt text-primary mr-3"></i>대전광역시 중구 계룡로
+					846
+				</p>
+				<p class="mb-2">
+					<i class="fa fa-envelope text-primary mr-3"></i>kdy@ddit.com
+				</p>
+				<p class="mb-0">
+					<i class="fa fa-phone-alt text-primary mr-3"></i>+010-1234-5678
+				</p>
+			</div>
+			<div class="col-lg-8 col-md-12">
+				<div class="row">
+					<div class="col-md-4 mb-5">
+						<div class="d-flex flex-column justify-content-start">
+							<a class="text-secondary mb-2" href="#"><i
+								class="fa fa-angle-right mr-2"></i>마켓소개</a> <a
+								class="text-secondary mb-2" href="#"><i
+								class="fa fa-angle-right mr-2"></i>안심귀가서비스란?</a> <a
+								class="text-secondary mb-2" href="#"><i
+								class="fa fa-angle-right mr-2"></i>고객센터</a> <a
+								class="text-secondary mb-2" href="#"><i
+								class="fa fa-angle-right mr-2"></i>메인페이지</a> <a
+								class="text-secondary mb-2" href="#"><i
+								class="fa fa-angle-right mr-2"></i>마이페이지</a> <a
+								class="text-secondary" href="#"><i
+								class="fa fa-angle-right mr-2"></i>커뮤니티</a>
+						</div>
+					</div>
+					<div class="col-md-4 mb-5">
+						<div class="d-flex flex-column justify-content-start">
+							<a class="text-secondary mb-2" href="#"><i
+								class="fa fa-angle-right mr-2"></i>이용약관</a> <a
+								class="text-secondary" href="#"><i
+								class="fa fa-angle-right mr-2"></i>개인정보처리방침</a>
+						</div>
+					</div>
+					<div class="col-md-4 mb-5">
+						<h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+						<div class="d-flex">
+							<a class="btn btn-primary btn-square mr-2" href="#"><i
+								class="fab fa-twitter"></i></a> <a
+								class="btn btn-primary btn-square mr-2" href="#"><i
+								class="fab fa-facebook-f"></i></a> <a
+								class="btn btn-primary btn-square mr-2" href="#"><i
+								class="fab fa-linkedin-in"></i></a> <a
+								class="btn btn-primary btn-square" href="#"><i
+								class="fab fa-instagram"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row border-top mx-xl-5 py-4"
+			style="border-color: rgba(256, 256, 256, .1) !important;">
+			<div class="col-md-6 px-xl-0">
+				<p class="mb-md-0 text-center text-md-left text-secondary">
+					© <a class="text-primary" href="#">copyright</a>.상추마켓
+				</p>
+			</div>
+			<div class="col-md-6 px-xl-0 text-center text-md-right">
+				<img class="img-fluid" src="images/img/payments.png" alt="">
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+function prodInsert(){
+	location.href="/prodInsertform.do";	
+}
+
+function newChatLink(x){
+	   // var tradeNo = $(x).data("tradeNo");
+	    var tradeNo = $(x).attr("data-tradeNo");
+	    
+	    
+	    console.log(tradeNo);
+	    
+	    var servletUrl = "newChatRequest.do";
+	    
+	    var fullUrl = servletUrl + "?tradeNo=" + tradeNo;
+	    
+	    $.ajax({
+	        url : '<%=request.getContextPath()%>/newChatRequest.do',
+		data : "tradeNo=" + tradeNo,
+     type : "POST",
+     dataType : "json",
+     success : function(res) {
+     	if(res.sw=="성공"){
+         	// 성공 기등록 본인 실패
+         	alert('해당 거래글에 새로운 채팅이 개설되었습니다! 마이페이지에서 채팅을 하실 수 있습니다!');
+         }else if(res.sw=="기등록"){
+         	alert('해당 게시글에 이미 채팅방이 개설되어있습니다!');
+         }else if(res.sw=="본인"){
+         	alert('회원님이 작성한 게시글입니다!');
+         }else{
+         	alert('알 수 없는 오류로 채팅방 개설에 실패했습니다!');
+         }
+     },
+     error : function( jqXHR, textStatus, errorThrown ) {
+
+     	alert( textStatus );
+
+     	alert( errorThrown );
+
+    	}
+ })
+};
+</script>
+</html>

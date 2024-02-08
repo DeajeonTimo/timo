@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+
+proc1 = () =>{
+	
+	str = prompt("주민등록번호를 입력하세요.");
+	year = 0;
+	if(str.charAt(7)==1 || str.charAt(7)==2){
+		bir = `생일 : 19${str.substring(0,2)}년  ${str.substring(2,4)}월 ${str.substring(4,6)}일 <br>`; 
+		year = 1900 + parseInt(str.substring(0,2));
+	}else{
+		bir = `생일 : 20${str.substring(0,2)}년  ${str.substring(2,4)}월 ${str.substring(4,6)}일 <br>`; 
+		year = 2000 + parseInt(str.substring(0,2));
+	}
+		
+	
+	if(str.charAt(7)==1 || str.charAt(7)==3){
+			gender = `성별 : 남자 <br>`;
+	}else{
+			gender = `성별 : 여자 <br>`;
+	}
+	
+	date = new Date();
+
+	age = date.getFullYear() - year;
+	
+	total = bir + gender + age;
+	
+	document.getElementById('result1').innerHTML = total;
+	
+}
+
+proc2 = () =>{
+	multi = "234567892345";
+	
+	input = prompt("주민등록번호를 입력하세요");
+	
+	input = input.replace("-","");
+	
+	
+	sum = 0;
+
+	for(i=0; i<multi.length; i++){
+		sum+= parseInt(multi.charAt(i))*parseInt(input.charAt(i))
+
+	
+	}
+	
+	
+	
+	sum= 11 - sum%11;
+	
+	if(sum==10){
+		sum = 0;
+	}else if(sum==11){
+		sum = 1;
+	}
+	
+	result = "올바른 주민등록번호가 아닙니다.";
+	
+	if(sum == parseInt(input.charAt(12))){
+		result = "올바른 주민등록번호입니다.";
+	}
+	
+	document.getElementById('result2').innerHTML = result;
+}
+
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4>prompt로 주민등록번호를 입력 받아 생년월일과 성별, 나이를 출력하는 프로그램</h4>
+<input type ="button" value="확인" onclick="proc1()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4>주민등록번호를 입력 받아 주민등록번호의 유효성을 검사하는 프로그램을 작성하시오.(ABCDEF-GHIJKLM)
+</h4>
+<input type ="button" value="확인" onclick="proc2()">
+<br><br>
+<div id="result2"></div>
+</div>
+</body>
+</html>

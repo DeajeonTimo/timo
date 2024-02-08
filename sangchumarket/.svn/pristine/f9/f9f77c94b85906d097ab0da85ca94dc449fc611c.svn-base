@@ -1,0 +1,29 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>거래 제시 관리...</title>
+</head>
+<body>
+	<h2>대화방</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>대화방 번호</th>
+				<th>제시 하기</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+	<hr>
+	<h2>받은 거래 제시</h2>
+	
+	<hr>
+	<h2>승낙 대기중인 제시</h2>
+	
+</body>
+</html>

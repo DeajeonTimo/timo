@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+body *{
+  box-sizing: border-box;
+  margin : 2px;
+  padding : 5px;
+  border-radius: 50px;
+ /*  border : 2px dotted gold; */
+}
+#parent1{
+  display : flex;
+  flex-direction: column;
+}
+#second{
+   display : flex;
+   flex-direction: row;
+}
+header, footer{
+   height : 80px;
+   background-image : linear-gradient(skyblue, white);
+}
+aside, section{
+   height : 500px;
+}
+aside{
+   /* flex : 1,1,auto */
+   flex : 30%;
+   background : #fadadd;
+   padding : 50px;
+}
+section{
+  flex : 70%;
+  background : #ffaadd;
+}
+section div{
+  width : 90%;
+  height : 40%;
+  border : 1px dotted green;
+  margin : 10px auto;
+}
+section h3,  section h4{
+  width : 90%;
+  margin : 10px auto;
+ 
+}
+
+img {
+   width : 50%;
+   height : 50%;
+}
+</style>
+</head>
+<body>
+<div id="parent1">
+  <header></header>
+  <div id="second">
+    <aside>
+      <h3>Links</h3>
+      <ul>
+         <li><a href="hhtp://www.w3schools.com">w3schools</a></li>
+         <li><a href="http://www.naver.com">naver</a></li>
+         <li><a href="http://www.daum.net">daum</a></li>
+      </ul>
+      <figure>
+        <img src="../images/spongebob.png" alt="spongebob.png">
+        <figcaption>스폰지밥</figcaption>
+      </figure>
+    </aside>
+    
+    <section>
+     <h3>여기는 ~~~~~~</h3>
+     <div id="top"> 
+       <h4>div와 span</h4>
+       <p></p>
+     </div>
+     <div id="bottom">
+       <h4>simentic tag</h4>
+       <p></p>
+     </div>
+    </section>
+  </div>
+  <footer></footer>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

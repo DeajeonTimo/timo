@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+//$(document).ready(function(){ })
+//$(function(){ })
+
+$(()=>{
+	
+	$('#par').on('click',()=>{
+		$('span').parent().css('border','2px solid red');
+	})
+	
+	$('#parts').on('click',()=>{
+		$('span').parents().css('border','2px solid green');
+	})
+	
+	$('#partse').on('click',()=>{
+		$('span').parents('ul').css('border','2px solid blue');
+	})
+	
+	$('#partun').on('click',()=>{
+		$('span').parentsUntil('#result1').css('border','2px solid hotpink');
+	})
+	
+	$('.btn').on('click',function(){
+		vparents = $(this).parents('.result');
+		
+		vspan = vparents.find('span');
+		
+		vspan.css('background','gold');
+	})
+	
+})
+</script>
+<style>
+.ancestors * { 
+  display: block;
+  border: 2px solid lightgrey;
+  color: lightgrey;
+  padding: 5px;
+  margin: 15px;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="parent" id="par">
+<input type ="button" value="parents" id="parts">
+<input type ="button" value="parent_se" id="partse">
+<input type ="button" value="parent_unt" id="partun">
+<br><br>
+<div id="result1" class="ancestors">
+ <div style="width:500px;">div (great-grandparent)
+    <ul>ul (grandparent)  
+      <li>li (direct parent)
+        <span>span</span>
+      </li>
+    </ul>   
+  </div>
+</div>
+</div>
+
+<div class="box">
+<h4></h4>
+<br><br>
+<div id="result2" class="ancestors result">
+ <div style="width:500px;">div (great-grandparent)
+    <ul>ul (grandparent)  
+      <li>li (direct parent)
+        <span>span</span>
+      </li>
+    </ul>   
+      <button class ="btn" type="button">확인</button>
+  </div>
+</div>
+
+<div id="result3" class="ancestors result">
+ <div style="width:500px;">div (great-grandparent)
+    <ul>ul (grandparent)  
+      <li>li (direct parent)
+        <span>span</span>
+      </li>
+    </ul>   
+      <button class ="btn" type="button">확인</button>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

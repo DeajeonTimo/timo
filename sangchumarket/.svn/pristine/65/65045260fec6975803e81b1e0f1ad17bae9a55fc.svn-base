@@ -1,0 +1,118 @@
+package sangchu.chat.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.session.SqlSession;
+
+import mybatis.config.MybatisUtil;
+import sangchu.chat.vo.ChatDetailVO;
+import sangchu.chat.vo.ChatVO;
+
+public class ChatDaoImpl implements IChatDao {
+	private static IChatDao dao;
+	private ChatDaoImpl() {}
+	private SqlSession sqlSession;
+	
+	/*
+		최초 작성자 : 김석호
+		최초 작성일 : 2023.08.07 13:22
+		
+		최근 수정자 : 김석호
+		최근 수정일 : 2023.08.10 01:30
+		
+		수정내역
+		2023.08.10 01:30 - 김석호 : 이미지파일명 가져오는 메소드 추가
+	*/
+	
+	public static IChatDao getInstance() {
+		if(dao==null) dao = new ChatDaoImpl();
+		return dao;
+	}
+	
+	@Override
+	public ChatVO getChatVO(String c_no) {
+		ChatVO vo = null;
+		sqlSession = MybatisUtil.getSqlSession();
+		try {
+			vo = sqlSession.selectOne("chat.getChatVO", c_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(sqlSession!=null) sqlSession.close();
+		}
+		return vo;
+	}
+
+	@Override
+	public List<ChatVO> getAllChatList(String email) {
+		List<ChatVO> list = null;
+		sqlSession = MybatisUtil.getSqlSession();
+		try {
+			list = sqlSession.selectList("chat.getAllChatList", email);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(sqlSession!=null) sqlSession.close();
+		}
+		return list;
+	}
+
+	@Override
+	public List<ChatDetailVO> getChatLog(String c_no) {
+		List<ChatDetailVO> list = null;
+		sqlSession = MybatisUtil.getSqlSession();
+		try {
+			list = sqlSession.selectList("chat.getChatLog", c_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(sqlSession!=null) sqlSession.close();
+		}
+		return list;
+	}
+
+	@Override
+	public int insertChatLog(ChatDetailVO vo) {
+		int res = 0;
+		sqlSession = MybatisUtil.getSqlSession();
+		try {
+			res = sqlSession.insert("chat.insertChatLog", vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(res>0) sqlSession.commit();
+			if(sqlSession!=null) sqlSession.close();
+		}
+		return res;
+	}
+
+	@Override
+	public int insertNewChat(String t_no) {
+		int res = 0;
+		sqlSession = MybatisUtil.getSqlSession();
+		try {
+			res = sqlSession.insert("chat.insertNewChat", t_no);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(res>0) sqlSession.commit();
+			if(sqlSession!=null) sqlSession.close();
+		}
+		return res;
+	}
+
+	@Override
+	public String emailImage(String email) {
+		String img = null;
+		try {
+			sqlSession = MybatisUtil.getSqlSession();
+			img = sqlSession.selectOne("chat.emailImage", email);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if(sqlSession!=null) sqlSession.close();
+		}
+		return img;
+	}
+
+}

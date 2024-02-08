@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(()=>{
+	$('#btn1').on('click',()=>{
+		
+		
+		$('#result1 p').attr('class','p1');
+		$('p').attr('title','무궁화꽃');
+	})
+	
+	$('#btn2').on('click',function(){
+		$('#result2 p').attr('title',function(){
+			//return $(this).text().substr(0,3); 
+			
+			
+			vptext = $(this).text();
+			
+			txtarr = vptext.split(" ");
+			
+			return txtarr[0];
+			
+		})
+	})
+})
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn1">
+<br><br>
+<div id="result1">
+	<p>무궁화 꽃이 피었습니다</p>
+	<p>능수화 꽃이 피었습니다</p>
+	<p>진달래 꽃이 피었습니다</p>
+	<p>라일락 꽃이 피었습니다</p>
+	<p>수선화  꽃이 피었습니다</p>
+	<p>봉숭아 꽃이 피었습니다</p>
+</div>
+</div>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" id="btn2">
+<br><br>
+<div id="result2">
+	<p>무궁화 꽃이 피었습니다</p>
+	<p>능수화 꽃이  피었습니다</p>
+	<p>진달래 꽃이 피었습니다</p>
+	<p>라일락 꽃이 피었습니다</p>
+	<p>수선화 꽃이 피었습니다</p>
+	<p>봉숭아 꽃이 피었습니다</p>
+</div>
+</div>
+</body>
+</html>

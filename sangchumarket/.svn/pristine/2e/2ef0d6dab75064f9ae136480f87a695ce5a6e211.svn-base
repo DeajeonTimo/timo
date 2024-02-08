@@ -1,0 +1,403 @@
+<%@page import="sangchu.adminMode.service.AdminModeServiceImpl"%>
+<%@page import="sangchu.adminMode.service.IAdminModeService"%>
+<%@page import="sangchu.main.vo.MemberVO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<script src="<%=request.getContextPath()%>/js/jquery/jquery-3.7.0.min.js"></script>
+
+<%
+MemberVO memVO = (MemberVO) request.getAttribute("memVO");
+%>
+
+<style>
+html, body {
+	font-family: 'Noto Sans KR', sans-serif;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+html {
+	min-width: 1200px;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+/* 회원정보와 리포트 */
+.userInfoWrap {
+	display: flex;
+	flex-direction: column;
+	border: 3px solid grey;
+	border-radius: 80px;
+	width: 80%;
+	height: 90%;
+}
+
+.userInfoBox-top {
+	flex: 7;
+	border: 2px solid grey;
+	border-radius: 50px;
+	width: 85%;
+	margin: 0 auto;
+	display: flex;
+	margin-top: 40px;
+}
+
+.userInfoBox-top-major {
+	flex: 5;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-left: -25px;
+}
+
+/* 회원 이미지 */
+.majorInfoSection-img img {
+	width: 150px;
+	height: 150px;
+	padding: 15px 20px 15px 20px;
+	background-color: #dfdfdf;
+	border-radius: 10px;
+	margin-top: 30px;
+	margin-bottom: 15px;
+}
+
+/*정지일이 있을 경우에만 출력 - 클릭하면 정지일 해제 가능*/
+.majorInfoSection-info-stop {
+	margin: 0 auto;
+	width: 50%;
+	padding-top: 5px;
+	margin-top: 10px;
+	height: 70px;
+	border: 2px dotted #FF6174;
+	dispaly: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+	border-radius: 10px;
+}
+
+.stopdate-Img {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.stopdate-Img img {
+	width: 20px;
+	height: 20px;
+	opacity: 80%;
+}
+
+.stopdate-txt {
+	text-align: center;
+	color: #FF6174;
+	font-size: 0.8rem;
+}
+
+.majorInfoSection-info-stop button{
+	width: 90px;
+	height: 20px;
+	background : white;
+	color: grey;
+	border : 1px solid grey;
+	border-radius: 10px;
+	justify-content: center;
+	align-items: center; 
+	cursor: pointer;
+}
+
+.includeButton{
+display: flex;
+	justify-content: center;
+	align-items: center; 
+
+}
+.majorInfoSection-info-stop button:hover{
+transition: 0.2s ease-out;
+	background-color: #03cd5d;
+		color: white;
+		border: none;
+	
+}
+
+.userInfoBox-top-detail {
+	flex: 5;
+}
+
+.userInfoBox-top-detail table {
+	margin-top: 60px;
+	margin-left: -60px;
+	border-collapse: collapse;
+	width: 400px;
+	text-align: left;
+	border: none;
+}
+
+/* .userInfoBox-top-detail table tr {
+        background-color: #dfdfdf;
+        width: 150px;
+    } */
+.userInfoBox-top-detail table td {
+	width: 150px;
+	height: 20px;
+	padding-left: 30px;
+}
+
+.userInfoBox-top-detail table td:nth-child(1) {
+	background-color: #dfdfdf;
+}
+
+.userInfoBox-bottom {
+	flex: 3;
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+
+.userInfoBox-bottom-wrap {
+	margin: 0 auto;
+	border: 2px solid grey;
+	width: 85%;
+	height: 150px;
+	border-radius: 40px;
+	margin-top: 15px;
+}
+
+.goBack {
+	width: 50px;
+	height: 30px;
+	border-radius: 20px;
+	background-color: grey;
+	color: white;
+	float: right;
+	margin-right: 50px;
+	margin-top: 50px;
+	border: none;
+	text-align: center;
+	font-size: 25px;
+	cursor: pointer;
+}
+
+.goBack:hover {
+	transition: 0.2s ease-out;
+	background-color: #03cd5d;
+}
+
+.awaitVerification {
+	color: red;
+}
+</style>
+<body>
+	<div class="userInfoWrap">
+		<div class="userInfoBox-top">
+			<div class="userInfoBox-top-major">
+				<div class="majorInfoSection-img">
+					<img src="../../images/user_214163.png">
+				</div>
+				<div class="majorInfoSection-info"><%=memVO.getEmail()%></div>
+				<div class="majorInfoSection-info"><%=memVO.getName()%></div>
+				<div class="majorInfoSection-info">
+					<%
+					if (memVO.getA_code().equals("1")) {
+					%>
+					<span class="awaitVerification">이메일 인증 대기 중</span>
+					<%
+					} else {
+					%>
+					사용 가능
+					<%
+					}
+					%>
+				</div>
+				<%
+				if (memVO.getU_stopdate() != null) {
+				%>
+				<div class="majorInfoSection-info-stop"
+					id="majorInfoSection-info-stop">
+					<div class="stopdate-Img">
+						<img src="../../images/adminMode_alert.png" alt="alert.png">정지된
+						계정
+					</div>
+					<div class="stopdate-txt">
+						<%=memVO.getU_stopdate()%>
+					</div>
+					<div class="includeButton">
+						<button type="button" class="cancelStop" id="cancelStop">정지해제</button>
+					</div>
+				</div>
+						<%
+						}
+						%>
+			</div>
+
+			<div class="userInfoBox-top-detail">
+				<table border="1">
+					<tr>
+						<td>닉네임</td>
+						<td>
+							<%
+							if (memVO.getU_nick() != null) {
+							%> <%=memVO.getU_nick()%> <%
+ }
+ %>
+						</td>
+					</tr>
+					<tr>
+						<td>연락처</td>
+						<td>
+							<%
+							if (memVO.getU_tel() != null) {
+							%> <%=memVO.getU_tel()%> <%
+ }
+ %>
+						</td>
+					</tr>
+					<tr>
+						<td>마케팅활용동의</td>
+						<td>
+							<%
+							if (memVO.getU_marketing() != null) {
+							%> <%=memVO.getU_marketing()%> <%
+ }
+ %>
+						</td>
+					</tr>
+					<tr>
+						<td>생년월일</td>
+						<td>
+							<%
+							if (memVO.getU_birth() != null) {
+							%> <%=memVO.getU_birth()%> <%
+ }
+ %>
+						</td>
+					</tr>
+					<tr>
+						<td>성별</td>
+						<td>
+							<%
+							if (memVO.getU_gender() != null) {
+							%> <%=memVO.getU_gender()%> <%
+ }
+ %>
+						</td>
+					</tr>
+					<tr>
+						<td>지역?</td>
+						<td>
+							<%
+							if (memVO.getU_loc() != 0) {
+							%> <%=memVO.getU_loc()%> <%
+ }
+ %>
+
+						</td>
+					</tr>
+					<tr>
+						<td>가입일</td>
+						<td>
+							<%
+							if (memVO.getU_regdate() != null) {
+							%> <%=memVO.getU_regdate()%> <%
+ }
+ %>
+						</td>
+					</tr>
+					<tr>
+						<td>마지막접속일</td>
+						<td>
+							<%
+							if (memVO.getLogindate() != null) {
+							%> <%=memVO.getLogindate()%> <%
+ }
+ %>
+						</td>
+					</tr>
+					<tr>
+						<td>비밀번호</td>
+						<td><%=memVO.getPass()%></td>
+					</tr>
+					<tr>
+						<td>최근비밀번호변경일</td>
+						<td>
+							<%
+							if (memVO.getU_update() != null) {
+							%> <%=memVO.getU_update()%> <%
+ }
+ %>
+						
+					</tr>
+					<tr>
+						<td id="escape">탈퇴일</td>
+						<td>
+							<%
+							if (memVO.getU_withdrawdate() != null) {
+							%> <%=memVO.getU_withdrawdate()%> <%
+ }
+ %>
+						</td>
+					</tr>
+				</table>
+				<button type="button" id="goBack" class="goBack">X</button>
+			</div>
+		</div>
+		<div class="userInfoBox-bottom">
+			<div class="userInfoBox-bottom-wrap">
+				<div class="userInfoBox-bottom-wrap-title">통계</div>
+				<div class="userInfoBox-bottom-wrap-content"></div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+$(function(){
+	$('#goBack').on('click', function(){
+		$('#content').empty();
+		$('#content').load('<%=request.getContextPath()%>/manageUsers.do');
+		})
+	
+	
+	$('#cancelStop').on('click',function(){
+		var answer = confirm('계정정지를 해제하시겠습니까?');
+		if(answer){
+			var useremail = "<%=memVO.getEmail()%>";
+			$.ajax({
+				
+				url: "<%=request.getContextPath()%>/cancelStopdate.do",
+				type : 'post',
+				data : {"email" : useremail},
+				success : function(res){
+					if(res.sw=="성공"){
+						$('#majorInfoSection-info-stop').remove();
+					alert('계정 정지해제 완료');
+				}else{
+					alert('오류로 인한 계정 정지해제 실패');
+					location.href = '<%=request.getContextPath()%>/goErrorPage.do?error=계정 정지해제 실패';
+				}
+				},
+				error : function(xhr){
+					alert(xhr.status)
+					location.href = `<%=request.getContextPath()%>/goErrorPage.do?error=${xhr.status}`;
+				},
+				dataType : 'json'
+			}) //ajax 끝
+		}
+	})
+		
+	})
+</script>
+</html>

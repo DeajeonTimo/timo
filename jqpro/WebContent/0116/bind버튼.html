@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function(){
+	$('.btn1').on('click',function(){
+		
+		//새로운 버튼을 만든다
+		newBtn = $('<input type ="button" value="확인" class="btn1">')
+		
+		//result1에 추가한다
+		$('#result1').append(newBtn);
+	})
+	
+	$('.btn2').on('click',function(){
+		$('.btn1').off('click');
+	})
+})
+</script>
+</head>
+<body>
+
+<div class="box">
+<h4></h4>
+<input type ="button" value="확인" class="btn1">
+<input type ="button" value="해제" class="btn2">
+<br><br>
+<div id="result1"></div>
+</div>
+</body>
+</html>

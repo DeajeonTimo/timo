@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="../css/public.css">
+<script>
+//문자배열 
+arr = ["Hello", "Happy", "newYear" ,"사랑은 늘 도망가",
+	  "별빛같은 나의 사랑아", "다시 만날 수 있을까"]
+
+
+proc1 = () =>{
+	
+	//랜덤 
+	rand = Math.floor(Math.random() * arr.length);
+	
+	//문자열선택 arr[rand] - textNode로 생성 
+	vtext = document.createTextNode(arr[rand]);
+	
+	//p태그 생성 
+	vp = document.createElement('p');
+		
+	//p태그에 vtext를 추가 
+	vp.appendChild(vtext);
+	
+	//result1접근 - p태그를 추가 
+	vres = document.getElementById('result1');
+	vres.appendChild(vp);
+	
+}
+proc2 = () =>{
+	
+	//부모 검색 - result1
+	vparent = document.getElementById('result1') ;
+	
+	//삭제대상의 자식을 선택 - firstChild
+	vchild =vparent.lastChild  ;
+	
+	//삭제하기 - 부모.removeChild(자식);
+	vparent.removeChild(vchild);
+}
+
+proc3 = () =>{
+	
+	//랜덤 
+	rand = Math.floor(Math.random() * arr.length);
+	
+	//문자열선택 arr[rand] - textNode로 생성 
+	vtext = document.createTextNode(arr[rand]);
+	
+	//input type="button" value="삭제"
+	//input 태그 생성 
+	vinput =  document.createElement('input');
+	vinput.type = "button" ;
+	vinput.value= "삭제" ;
+	vinput.onclick = function(){
+		vptag  = this.parentNode;
+		
+		vptag.remove();
+	}
+	
+	//p태그 생성 
+	vp = document.createElement('p');
+	
+	//p태그에 문자열추가 
+	vp.appendChild(vtext);
+	
+	//p태그에 vinput추가 
+	vp.appendChild(vinput);
+	
+	//result3를 검색 - p태그를 추가 
+	vres3 = document.getElementById('result3');
+	vres3.appendChild(vp);
+	
+}
+selImg =null;
+
+start = (but) =>{ 
+	//but 매개변수 : 시작버튼 , 지역변수
+	
+	//종료시 style 설정한 테두리를  지운다
+	if(selImg != null) selImg.style.border ="none";
+	
+	//시작버튼을 안보이도록 설정 
+	but.style.display = "none";
+	
+	glbut = but;
+		
+	//id=result4를 검색 - 부모 역활 
+	vres4 = document.getElementById('result4');
+	
+	
+	vid = setInterval(function(){ 
+		
+		
+		//첫번째 이미지를 선택  -firstChild - 자식 
+		vimg = vres4.firstChild;
+		
+		//부모.appendChild(자식); - 이동의 의미로 실행 
+		vres4.appendChild(vimg);
+		
+	}, 500);
+
+	
+}
+
+stop = () => {
+	//시작버튼을 보이도록 설정 
+	glbut.style.display = "inline";
+	
+	clearInterval(vid);
+	
+	//전체이미지
+    imgAll = document.querySelectorAll('#result4 img');
+	
+	//랜덤발생 - 이미지의 갯수 이용  - imgAll.length
+	rand =  Math.floor(Math.random() * imgAll.length);  
+	
+	//이미지를 선택  //imgAll[rand];
+	selImg =imgAll[rand] ;
+	
+	//selImg의 스타일 변경 - border 
+	selImg.style.border = "10px double red";
+}
+</script>
+
+<style>
+img{
+  width : 80px;
+  height : 80px;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h4>  </h4>
+<input type="button" value="확인" onclick="proc1()">
+<input type="button" value="삭제" onclick="proc2()">
+<br><br>
+<div id="result1"></div>
+</div>
+
+<div class="box">
+<h4>  </h4>
+<input type="button" value="추가" onclick="proc3()">
+<br><br>
+<div id="result3"></div>
+</div>
+
+
+<div class="box">
+<h4>  </h4>
+<input type="button" value="시작" onclick="start(this)">
+<input type="button" value="종료" onclick="stop()">
+<br><br>
+<div id="result4">
+ <img src="../images/무지게1.png" alt="무지게1.png">
+ <img src="../images/뱅쇼.jpg" alt="뱅쇼.jpg">
+ <img src="../images/우주1.jpeg" alt="우주1.jpeg">
+ <img src="../images/셔틀콕.jpg" alt="셔틀콕.jpg">
+ <img src="../images/지구.jpeg" alt="지구.jpeg">
+ <img src="../images/커피.png" alt="커피.png">
+ </div>
+</div>
+
+
+
+</body>
+</html>
